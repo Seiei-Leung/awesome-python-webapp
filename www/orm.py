@@ -45,7 +45,7 @@ def create_args_string(num):
 async def select(sql,args,size=None):
     log(sql)
     global __pool #引入全局变量
-    with await __pool.get() as conn: #打开pool的方法
+    with await __pool as conn: #打开pool的方法,或-->async with __pool.get() as conn:
         cur = await conn.cursor(aiomysql.DictCursor) #创建游标,aiomysql.DictCursor的作用使生成结果是一个dict
         await cur.execute(sql.replace('?',"%s"),args or ()) #执行sql语句，sql语句的占位符是'?',而Mysql的占位符是'%s'
         if size:
@@ -73,7 +73,7 @@ async def select(sql,args,size=None):
 #封装INSTERT,UPDATE,DELETE，老师的做法
 async def execute(sql, args, autocommit=True):
     log(sql)
-    async with __pool.get() as conn:#为什么这里不使用get(),后面就调用不了save
+    with await __pool as conn:#为什么这里不使用get(),后面就调用不了save
         if not autocommit:
             await conn.begin()
         try:
@@ -116,7 +116,7 @@ class FloatField(Field):
         super(FloatField,self).__init__(name,ddl,primary_key,default)
 
 class TextField(Field):
-    def __init__(self,name=None,ddl='Text',primary_key=False,default=None):
+    def __init__(self,name=None,ddl='text',primary_key=False,default=None):
         super(TextField,self).__init__(name,ddl,primary_key,default)
 
 #元类
