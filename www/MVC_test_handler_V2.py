@@ -9,12 +9,18 @@ __author__ = 'Seiei'
 
 from web_app.webframe import get,post
 import asyncio
-from web_app.models import User #引入orm框架的User模型
+from web_app.models import User,Blog
+import time
 
 @get('/')
-async def index(request):
-    users = await User.findall()
+def index(request):
+    summary = 'Hello,World.'
+    blogs = [
+        Blog(id='1', name='Test Blog', summary=summary, created_at=time.time()-120),
+        Blog(id='2', name='Something New', summary=summary, created_at=time.time()-3600),
+        Blog(id='3', name='Learn Swift', summary=summary, created_at=time.time()-7200)
+    ]
     return {
-    '__template__':'text.html',
-    'users':users
-    } #不懂就查看Web框架的middleware里的Response_factory源码以及Jinja2初始化的源码，__template__是用来辨认出返回数据是Jinja2模板，而不是Json，同时可以从初始化Jinja2那里获取Environment，从而导进名叫text.html的模板；而dict中的users是传递给模板的数据
+        '__template__': 'blogs.html',
+        'blogs': blogs
+    }
