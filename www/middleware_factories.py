@@ -13,9 +13,8 @@ import asyncio, os, json, time
 from datetime import datetime
 from aiohttp import web
 from jinja2 import Environment, FileSystemLoader
-
-
 from web_app.webframe import add_routes, add_static
+from web_app.app import COOKIE_NAME,cookie2user
 
 #初始化jinja2，以便其他函数使用jinja2模板
 def init_jinja2(app, **kw):
@@ -90,10 +89,22 @@ async def response_factory(app,handler):
             t, m = r
             if isinstance(t, int) and t >= 100 and t < 600:
                 return web.Response(t, str(m))
-        # default，错误
+        # default
         resp = web.Response(body=str(r).encode('utf-8'))
         resp.content_type = 'text/plain;charset=utf-8'
         return resp
     return response_middleware
 
-
+#解析cookie并绑定在request对象上
+async def auth_factory(app,handler):
+    async def auth(request):
+        logging.info('check user: %s %s' % (request.method, request.path))
+        request.__user__ = None #初始化
+        cookie_str = request.cookies.get(COOKIE_NAME) #读取cookie
+        if cookie_str:
+            user = await cookie2user(cookie_str)
+            if user:
+                logging.info('set current user: %s' % user.email)
+                request.__user__ = user
+        return await handler(request)
+    return auth

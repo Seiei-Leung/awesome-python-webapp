@@ -53,8 +53,7 @@ if __name__== '__main__':
     async def test():
         await orm.create_pool(loop,user='www-data', password='www-data', db='awesome')
         u = User(name='Test', email='test@example.com', passwd='123456780', image='about:blank')
-        await u.save()
-        f = await u.findall()
+        f = await u.findall(orderBy='create_at desc')
         print(f)
     
     loop = asyncio.get_event_loop()
