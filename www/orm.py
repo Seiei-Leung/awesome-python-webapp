@@ -222,8 +222,8 @@ class Model(dict,metaclass=ModelMetaclass):
         return rs[0]['__num__']
 
     @classmethod
-    async def find(cls,primarykey):
-        sql = '%s where `%s`=?'%(cls.__select__,primarykey)
+    async def find(cls,primarykey):#根据主键查找数据库
+        sql = '%s where `%s`=?'%(cls.__select__,cls.__primary_key__)
         rs = await select(sql,[primarykey],1)
         if len(rs) == 0:
             return None

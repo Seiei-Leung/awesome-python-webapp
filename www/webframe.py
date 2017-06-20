@@ -38,7 +38,7 @@ def get_required_kw_args(fn): #收集没有默认值的命名关键字参数
     for name, param in params.items():
         if str(param.kind) == 'KEYWORD_ONLY' and param.default == inspect.Parameter.empty:
             args.append(name)
-        return tuple(args)
+    return tuple(args)
 
 def get_named_kw_args(fn):  #获取命名关键字参数
     args = []
@@ -46,7 +46,7 @@ def get_named_kw_args(fn):  #获取命名关键字参数
     for name,param in params.items():
         if str(param.kind) == 'KEYWORD_ONLY':
             args.append(name)
-        return tuple(args)
+    return tuple(args)
 
 def has_named_kw_args(fn): #判断有没有命名关键字参数
     params = inspect.signature(fn).parameters
@@ -109,7 +109,7 @@ class RequestHandler(object):
         if kw is None:
             kw = dict(**request.match_info)
         else:
-            if not self._has_var_kw_args and self._named_kw_args: #当函数参数没有关键字参数时，移去request除命名关键字参数所有的参数信息
+            if not self._has_var_kw_arg and self._named_kw_args: #当函数参数没有关键字参数时，移去request除命名关键字参数所有的参数信息
                 copy = dict()
                 for name in self._named_kw_args:
                     if name in kw:

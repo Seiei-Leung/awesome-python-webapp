@@ -4,7 +4,7 @@
 __author__ = 'Seiei'
 
 '''
-初始化数据表
+新创建表
 '''
 
 import mysql.connector
