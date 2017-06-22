@@ -104,6 +104,7 @@ class RequestHandler(object):
             if request.method == 'GET': 
                 qs = request.query_string #The query string in the URL
                 if qs:
+                    kw = dict()
                     for k,v in parse.parse_qs(qs,True).items(): #Parse a query string given as a string argument.Data are returned as a dictionary. The dictionary keys are the unique query variable names and the values are lists of values for each name.
                         kw[k] = v[0]
         if kw is None:

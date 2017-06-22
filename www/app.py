@@ -9,28 +9,28 @@ __author__='Seiei'
 
 from web_app.webframe import get,post
 import asyncio
-from web_app.models import User,Blog,next_id
+from web_app.models import User,Blog,next_id,Comment
 import time
-from web_app.APIError import APIValueError,APIError
+from web_app.APIError import APIValueError,APIError,APIPermissionError,APIResourceNotfoundError
 import re, hashlib
 from web_app.configs.config import config
 from aiohttp import web
 import json
 import logging
+from web_app import markdown2
 
+
+#---------------------------------------------------MVC---------------------------------------------------------
 
 #首页
 @get('/')
-def index(request):
+async def index(request):
     summary = 'Hello,World.'
-    blogs = [
-        Blog(id='1', name='Test Blog', summary=summary, created_at=time.time()-120),
-        Blog(id='2', name='Something New', summary=summary, created_at=time.time()-3600),
-        Blog(id='3', name='Learn Swift', summary=summary, created_at=time.time()-7200)
-    ]
+    blogs = await Blog.findall(orderBy='create_at desc')
     return {
         '__template__': 'blogs.html',
-        'blogs': blogs
+        'blogs': blogs[0:4],
+        '__user__': request.__user__
     }
 
 #显示注册页面
@@ -47,8 +47,78 @@ def signin():
         '__template__': 'signin.html'
     }
 
+#显示创建blog页面
+@get('/manage/blogs/create')
+def manage_create_blog(request):
+    return {
+        '__template__': 'manage_blog_edit.html',
+        'id': '',
+        'action': '/api/blogs',
+        '__user__': request.__user__
+    }
+
+#用于显示文章页面
+@get('/blog/{id}')
+async def get_blog(request,*,id):
+    blog = await Blog.find(id)
+    comments = await Comment.findall('blog_id=?', [id], orderBy='create_at desc')
+    for c in comments:
+        c.html_content = text2html(c.content)
+    blog.html_content = markdown2.markdown(blog.content)
+    return {
+        '__template__': 'blog.html',
+        'blog': blog,
+        'comments': comments,
+        '__user__': request.__user__
+    }
+
+#管理blog页面
+@get('/manage/blogs')
+def manage_blogs(request,*, page='1'):
+    return {
+        '__template__': 'manage_blogs.html',
+        'page_index': get_page_index(page),
+        '__user__': request.__user__
+    }
+
+#修改日志页面
+@get('/manage/blogs/edit')
+def manage_edit_blog(request,*, id):
+    return {
+        '__template__': 'manage_blog_edit.html',
+        'id': id,
+        'action': '/api/blogs/%s' % id,
+        '__user__': request.__user__
+    }
+
+#评论页面
+@get('/manage/comments')
+def manage_comments(request,*, page='1'):
+    return {
+        '__template__': 'manage_comments.html',
+        'page_index': get_page_index(page),
+        '__user__': request.__user__
+    }
+
+#用户页面
+@get('/manage/users')
+def manage_users(request,*, page='1'):
+    return {
+        '__template__': 'manage_users.html',
+        'page_index': get_page_index(page),
+        '__user__': request.__user__
+    }
+
+#------------------------------------------------FUNCTION-------------------------------------------------------
+
 COOKIE_NAME = 'awesession'#用来在set_cookie中命名
 _COOKIE_KEY = config['session']['secret']#导入默认设置
+
+
+#检测有否登录且是否为管理员
+def check_admin(request):
+    if request.__user__ is None or not request.__user__.admin:
+        raise APIPermissionError()
 
 #制作set_cookie的value
 def user2cookie(user, max_age):
@@ -58,9 +128,80 @@ def user2cookie(user, max_age):
     L = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]#再把s进行摘要算法
     return '-'.join(L)
 
+
 #正则表达式我是参考这里的(http://www.cnblogs.com/vs-bug/archive/2010/03/26/1696752.html)
 _RE_EMAIL = re.compile(r'^(\w)+(\.\w)*\@(\w)+((\.\w{2,3}){1,3})$')
 _RE_PASSWD = re.compile(r'^[\w\.]{40}')#对老师这里的密码正则表达式也做了点修改
+
+
+#解释cookie
+async def cookie2user(cookie_str):
+    if not cookie_str:
+        return None
+    try:
+        L = cookie_str.split('-') #拆分字符串(D)
+        if len(L) !=3:
+            return None
+        uid, expires, sha1 = L
+        if float(expires) < time.time():#查看是否过期,这里廖大用的是int，但是字符串用int的时候，只能全是数字，不能含小数点
+            return None
+        user = await User.find(uid)
+        if user is None:
+            return None
+        #用数据库来生字符串(C)与cookie的比较
+        s = '%s-%s-%s-%s'%(uid, user.passwd, expires, _COOKIE_KEY)
+        if sha1 != hashlib.sha1(s.encode('utf-8')).hexdigest():
+            logging.info('invalid sha1')
+            return None
+        user.passwd = "******"
+        return user
+    except Exception as e:
+        logging.exception(e)
+        return None
+
+
+#用于选择当前页面
+def get_page_index(page_str):
+    p = 1 #初始化页数取整
+    try:
+        p = int(page_str)
+    except ValueError as e:
+        pass
+    if p < 1:
+        p = 1
+    return p
+
+#定义选取数量，每一页都会选取相应选取数量的数据库中blog出来显示
+class Page(object):
+
+    def __init__(self, item_count, page_index=1, page_size=10):#参数依次是：数据库博客总数，初始页，一页显示博客数
+        self.item_count = item_count
+        self.page_size = page_size
+        self.page_count = item_count // page_size + (1 if item_count % page_size > 0 else 0)#一共所需页的总数
+        if (item_count == 0) or (page_index > self.page_count):#假如数据库没有博客或全部博客总页数不足一页
+            self.offset = 0
+            self.limit = 0
+            self.page_index = 1
+        else:
+            self.page_index = page_index #初始页
+            self.offset = self.page_size * (page_index - 1) #当前页数，应从数据库的那个序列博客开始显示
+            self.limit = self.page_size #当前页数，应从数据库的那个序列博客结束像素
+        self.has_next = self.page_index < self.page_count #有否下一页
+        self.has_previous = self.page_index > 1 #有否上一页
+
+    def __str__(self):
+        return 'item_count: %s, page_count: %s, page_index: %s, page_size: %s, offset: %s, limit: %s' % (self.item_count, self.page_count, self.page_index, self.page_size, self.offset, self.limit)
+
+    __repr__ = __str__
+
+#显示日志评论页面html-->@get('/blog/{id}')显示页面
+def text2html(text):
+    lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
+    return ''.join(lines)
+
+#--------------------------------------------------API----------------------------------------------------------
+
+#接口都是用来返回信息给页面或从页面上读取命令操作服务器
 
 #用户注册api
 @post('/api/users')#注意这里路径是'/api/users'，而不是`/register`
@@ -88,7 +229,20 @@ async def api_register_usesr(*,name,email,passwd):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')#https://docs.python.org/2/library/json.html#basic-usage
     return r
 
-#验证登录信息
+#接口用于数据库返回用户
+@get('/api/users')
+async def api_get_users(*, page='1'):
+    page_index = get_page_index(page)
+    num = await User.findnumber('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, users=())
+    users = await User.findall(orderBy='create_at desc', limit=(p.offset, p.limit))
+    for u in users:
+        u.passwd = '******'
+    return dict(page=p, users=users)
+
+#登录时验证登录信息
 @post('/api/authenticate')
 async def authenticate(*,email,passwd):
     if not email:
@@ -114,35 +268,97 @@ async def authenticate(*,email,passwd):
     r.body = json.dumps(user, ensure_ascii = False).encode('utf-8')
     return r
 
-#解释cookie
-async def cookie2user(cookie_str):
-    if not cookie_str:
-        return None
-    try:
-        L = cookie_str.split('-') #拆分字符串(D)
-        if len(L) !=3:
-            return None
-        uid, expires, sha1 = L
-        if float(expires) < time.time():#查看是否过期,这里廖大用的是int，但是字符串用int的时候，只能全是数字，不能含小数点
-            return None
-        user = await User.find(uid)
-        if not user:
-            return None
-        #用数据库来生字符串(C)与cookie的比较
-        s = '%s-%s-%s-%s'%(uid, user.passwd, expires, _COOKIE_KEY)
-        if sha1 != hashlib.sha1(s.encode('utf-8')).hexdigest:
-            logging.info('invalid sha1')
-            return None
-        user.passwd = "******"
-        return user
-    except Exception as e:
-        logging.exception(e)
-        return None
+#登出
+@get('/signout')
+def signout(request):
+    referer = request.headers.get('Referer')
+    r = web.HTTPFound(referer or '/') #重回首页
+    r.set_cookie(COOKIE_NAME, '-deleted-', max_age=0, httponly=True) #送回一个名字一样的cookie重置
+    logging.info('user signed out.')
+    return r
+
+#接口用于存储写好的日志
+@post('/api/blogs')
+async def api_create_blogs(request, *, name, summary, content):
+    check_admin(request)
+    if not name or not name.strip():
+        raise APIValueError('name','name can not empty.')
+    if not summary or not summary.strip():
+        raise APIValueError('summary','summary can not empty.')
+    if not content or not content.strip():
+        raise APIValueError('content','content can not empty.')
+    blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, summary=summary.strip(), name=name.strip(), content=content.strip())
+    await blog.save()
+    return blog
+
+#接口用于数据库返回日志,见manage_blogs.html
+@get('/api/blogs')
+async def api_blogs(*, page='1'):
+    page_index = get_page_index(page)
+    num = await Blog.findnumber('count(id)')#查询日志总数
+    p = Page(num, page_index)
+    if num == 0: #数据库没日志
+        return dict(page=p, blogs=())
+    blogs = await Blog.findall(orderBy='create_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, blogs=blogs)#返回管理页面信息，及显示日志数
 
 
+#接口用于修改并保存日志，详情见manage_blog_edit.html
+@get('/api/blogs/{id}')
+async def api_get_blog(*, id):
+    blog = await Blog.find(id)
+    return blog
 
+#接口用于修改并保存日志，详情见manage_blog_edit.html
+@post('/api/blogs/{id}')
+async def api_update_blog(id, request, *, name, summary, content):
+    check_admin(request)
+    blog = await Blog.find(id)
+    if not name or not name.strip():
+        raise APIValueError('name', 'name cannot be empty.')
+    if not summary or not summary.strip():
+        raise APIValueError('summary', 'summary cannot be empty.')
+    if not content or not content.strip():
+        raise APIValueError('content', 'content cannot be empty.')
+    blog.name = name.strip()
+    blog.summary = summary.strip()
+    blog.content = content.strip()
+    await blog.update()
+    return blog
 
+#接口用于删除日志
+@post('/api/blogs/{id}/delete')
+async def api_delete_blog(request,*,id):
+    check_admin(request)
+    blog = await Blog.find(id)
+    await blog.remove()
+    return dict(id=id)
 
+#接口用于返回数据库的评论，见manage_comments.html
+@get('/api/comments')
+async def api_comments(*, page='1'):
+    page_index = get_page_index(page)
+    num = await Comment.findnumber('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, comments=())
+    comments = await Comment.findall(orderBy='create_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, comments=comments)
+
+#接口用于保存写好的评论
+@post('/api/blogs/{id}/comments')
+async def api_create_comments(id, request, *, content):
+    user = request.__user__ #登录再说
+    if not user:
+        raise APIPermissionError('Please signin first.')
+    if not content or not content.strip():
+        raise APIValueError('content', 'content cannot be empty.')
+    blog = await Blog.find(id)
+    if blog is None:
+        raise APIResourceNotFoundError('Blog')
+    comment = Comment(blog_id=blog.id, user_id=user.id, user_name=user.name, user_image=user.image, content=content.strip())
+    await comment.save()
+    return comment
 
 
 

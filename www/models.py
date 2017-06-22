@@ -53,6 +53,7 @@ if __name__== '__main__':
     async def test():
         await orm.create_pool(loop,user='www-data', password='www-data', db='awesome')
         u = User(name='Test', email='test@example.com', passwd='123456780', image='about:blank')
+        await Blog(id='1', name='Test Blog', summary='Hello', create_at=time.time()-120).save()
         f = await u.findall(orderBy='create_at desc')
         print(f)
     
