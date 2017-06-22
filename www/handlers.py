@@ -47,7 +47,7 @@ def signin():
         '__template__': 'signin.html'
     }
 
-#显示创建blog页面
+#显示创建日志页面
 @get('/manage/blogs/create')
 def manage_create_blog(request):
     return {
@@ -57,7 +57,7 @@ def manage_create_blog(request):
         '__user__': request.__user__
     }
 
-#用于显示文章页面
+#显示日志详情页面
 @get('/blog/{id}')
 async def get_blog(request,*,id):
     blog = await Blog.find(id)
@@ -72,7 +72,7 @@ async def get_blog(request,*,id):
         '__user__': request.__user__
     }
 
-#管理blog页面
+#日志列表页面
 @get('/manage/blogs')
 def manage_blogs(request,*, page='1'):
     return {
@@ -91,7 +91,7 @@ def manage_edit_blog(request,*, id):
         '__user__': request.__user__
     }
 
-#评论页面
+#评论列表页面
 @get('/manage/comments')
 def manage_comments(request,*, page='1'):
     return {
@@ -100,7 +100,7 @@ def manage_comments(request,*, page='1'):
         '__user__': request.__user__
     }
 
-#用户页面
+#用户列表页面
 @get('/manage/users')
 def manage_users(request,*, page='1'):
     return {
@@ -203,7 +203,7 @@ def text2html(text):
 
 #接口都是用来返回信息给页面或从页面上读取命令操作服务器
 
-#用户注册api
+#后端API创建新用户
 @post('/api/users')#注意这里路径是'/api/users'，而不是`/register`
 async def api_register_usesr(*,name,email,passwd):
     if not name or not name.strip():#如果名字是空格或没有返错，这里感觉not name可以省去，因为在web框架中的RequsetHandler已经验证过一遍了
@@ -229,7 +229,7 @@ async def api_register_usesr(*,name,email,passwd):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')#https://docs.python.org/2/library/json.html#basic-usage
     return r
 
-#接口用于数据库返回用户
+#后端API获取用户
 @get('/api/users')
 async def api_get_users(*, page='1'):
     page_index = get_page_index(page)
@@ -242,7 +242,7 @@ async def api_get_users(*, page='1'):
         u.passwd = '******'
     return dict(page=p, users=users)
 
-#登录时验证登录信息
+#后端API用户登录
 @post('/api/authenticate')
 async def authenticate(*,email,passwd):
     if not email:
@@ -268,7 +268,7 @@ async def authenticate(*,email,passwd):
     r.body = json.dumps(user, ensure_ascii = False).encode('utf-8')
     return r
 
-#登出
+#后端API用户登出
 @get('/signout')
 def signout(request):
     referer = request.headers.get('Referer')
@@ -277,7 +277,7 @@ def signout(request):
     logging.info('user signed out.')
     return r
 
-#接口用于存储写好的日志
+#后端API创建日志
 @post('/api/blogs')
 async def api_create_blogs(request, *, name, summary, content):
     check_admin(request)
@@ -291,7 +291,7 @@ async def api_create_blogs(request, *, name, summary, content):
     await blog.save()
     return blog
 
-#接口用于数据库返回日志,见manage_blogs.html
+#后端API获取日志列表,见manage_blogs.html
 @get('/api/blogs')
 async def api_blogs(*, page='1'):
     page_index = get_page_index(page)
@@ -303,13 +303,13 @@ async def api_blogs(*, page='1'):
     return dict(page=p, blogs=blogs)#返回管理页面信息，及显示日志数
 
 
-#接口用于修改并保存日志，详情见manage_blog_edit.html
+#后端API获取日志详情，详情见manage_blog_edit.html
 @get('/api/blogs/{id}')
 async def api_get_blog(*, id):
     blog = await Blog.find(id)
     return blog
 
-#接口用于修改并保存日志，详情见manage_blog_edit.html
+#后端API修改日志，详情见manage_blog_edit.html
 @post('/api/blogs/{id}')
 async def api_update_blog(id, request, *, name, summary, content):
     check_admin(request)
@@ -326,7 +326,7 @@ async def api_update_blog(id, request, *, name, summary, content):
     await blog.update()
     return blog
 
-#接口用于删除日志
+#后端API删除日志
 @post('/api/blogs/{id}/delete')
 async def api_delete_blog(request,*,id):
     check_admin(request)
@@ -334,7 +334,7 @@ async def api_delete_blog(request,*,id):
     await blog.remove()
     return dict(id=id)
 
-#接口用于返回数据库的评论，见manage_comments.html
+#后端API获取评论列表，见manage_comments.html
 @get('/api/comments')
 async def api_comments(*, page='1'):
     page_index = get_page_index(page)
@@ -345,7 +345,7 @@ async def api_comments(*, page='1'):
     comments = await Comment.findall(orderBy='create_at desc', limit=(p.offset, p.limit))
     return dict(page=p, comments=comments)
 
-#接口用于保存写好的评论
+#后端API创建评论
 @post('/api/blogs/{id}/comments')
 async def api_create_comments(id, request, *, content):
     user = request.__user__ #登录再说

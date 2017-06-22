@@ -14,7 +14,7 @@ from datetime import datetime
 from aiohttp import web
 from jinja2 import Environment, FileSystemLoader
 from web_app.webframe import add_routes, add_static
-from web_app.app import COOKIE_NAME,cookie2user
+from web_app.handlers import COOKIE_NAME,cookie2user
 
 #初始化jinja2，以便其他函数使用jinja2模板
 def init_jinja2(app, **kw):
