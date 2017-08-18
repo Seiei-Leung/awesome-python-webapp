@@ -3,100 +3,79 @@
 {% block title %}编辑日志{% endblock %}
 
 {% block beforehead %}
-
-<script>
-var
-    ID = '{{ id }}',
-    action = '{{ action }}';
-function initVM(blog) {
-    var vm = new Vue({
-        el: '#vm',
-        data: blog,
-        methods: {
-            submit: function (event) {
-                event.preventDefault();
-                var $form = $('#vm').find('form');
-                $form.postJSON(action, this.$data, function (err, r) {
-                    if (err) {
-                        $form.showFormError(err);
+<script type="text/javascript">
+    var 
+        ID = '{{ id }}' ,
+        action = '{{ action }}';
+    function initVM(blog) {
+        var vm = new Vue({
+            el:'#vm',
+            data:blog,
+            methods:{
+                submit:function(event){
+                    event.preventDefault();
+                    var $form = $('#vm');
+                    if (! this.name.trim()) {
+                        return $form.showFormError('请输入题目');
                     }
-                    else {
-                        return location.assign('/manage/blogs');
+                    if (! this.content.trim()) {
+                        return $form.showFormError('请输入内容');
                     }
-                });
+                    $form.postJSON(action,this.$data,function(err,r){
+                        if (!err) {
+                            return location.assign('/manage/blogs');
+                        }
+                    })
+                }
             }
+        })
+    }
+    $(function(){
+        if (ID) {
+            getJSON('/api/blogs/'+ID,function(err,blog){
+                if (err) {
+                    var $form = $('#vm');
+                    return $form.showFormError(err);
+                }
+                initVM(blog);
+            });
         }
-    });
-    $('#vm').show();
-}
-$(function () {
-    if (ID) {
-        getJSON('/api/blogs/' + ID, function (err, blog) {
-            if (err) {
-                return fatal(err);
-            }
-            $('#loading').hide();
-            initVM(blog);
-        });
-    }
-    else {
-        $('#loading').hide();
-        initVM({
-            name: '',
-            summary: '',
-            content: ''
-        });
-    }
-});
+        else {
+            initVM({
+                name:'',
+                summary:'',
+                content:''
+            });
+        }
+    })
+    $(function(){
+        var $topbarlistl = $('.topbarlist_fl li:first-child');
+        var $topbarlistr = $('.topbarlist_fl li:last-child');
+        $topbarlistl.removeClass('active');
+        $topbarlistr.addClass('active');
+    })
 </script>
-
 {% endblock %}
 
 {% block content %}
 
-    <div class="uk-width-1-1 uk-margin-bottom">
-        <div class="uk-panel uk-panel-box">
-            <ul class="uk-breadcrumb">
-                <li><a href="/manage/comments">评论</a></li>
-                <li><a href="/manage/blogs">日志</a></li>
-                <li><a href="/manage/users">用户</a></li>
-            </ul>
+<div class="edit_blog">
+    <form id="vm">
+        <div class="Formerror"></div>
+        <div>
+            <label for="blogName"><h1>{ { 标题 } }</h1></label>
+            <input type="text" name="blogName" id="blogName" placeholder="文章标题" v-model='name'></div>
+        <div>                
+            <label for="blogSummary"><h1>{ { 摘要 } }</h1></label>
+            <textarea id="blogSummary" placeholder="文章摘要" rows="5" v-model='summary'></textarea>
         </div>
-    </div>
-
-    <div id="error" class="uk-width-1-1">
-    </div>
-
-    <div id="loading" class="uk-width-1-1 uk-text-center">
-        <span><i class="uk-icon-spinner uk-icon-medium uk-icon-spin"></i> 正在加载...</span>
-    </div>
-
-    <div id="vm" class="uk-width-2-3">
-        <form v-on="submit: submit" class="uk-form uk-form-stacked">
-            <div class="uk-alert uk-alert-danger uk-hidden"></div>
-            <div class="uk-form-row">
-                <label class="uk-form-label">标题:</label>
-                <div class="uk-form-controls">
-                    <input v-model="name" name="name" type="text" placeholder="标题" class="uk-width-1-1">
-                </div>
-            </div>
-            <div class="uk-form-row">
-                <label class="uk-form-label">摘要:</label>
-                <div class="uk-form-controls">
-                    <textarea v-model="summary" rows="4" name="summary" placeholder="摘要" class="uk-width-1-1" style="resize:none;"></textarea>
-                </div>
-            </div>
-            <div class="uk-form-row">
-                <label class="uk-form-label">内容:</label>
-                <div class="uk-form-controls">
-                    <textarea v-model="content" rows="16" name="content" placeholder="内容" class="uk-width-1-1" style="resize:none;"></textarea>
-                </div>
-            </div>
-            <div class="uk-form-row">
-                <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-save"></i> 保存</button>
-                <a href="/manage/blogs" class="uk-button"><i class="uk-icon-times"></i> 取消</a>
-            </div>
-        </form>
-    </div>
+        <div>                
+            <label for="blogcontent"><h1>{ { 内容 } }</h1></label>
+            <textarea id="blogcontent" placeholder="文章内容"  rows="20" v-model='content'></textarea>
+        </div>
+        <button type="submit" v-on:click='submit'>保存</button>
+        <a href="#">取消</a>
+    </form>
+</div>
 
 {% endblock %}

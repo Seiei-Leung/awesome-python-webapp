@@ -20,7 +20,7 @@ import logging
 from web_app import markdown2
 
 
-#---------------------------------------------------MVC---------------------------------------------------------
+#---------------------------------- ----------------MVC---------------------------------------------------------
 
 #首页
 @get('/')
@@ -62,6 +62,7 @@ def manage_create_blog(request):
 async def get_blog(request,*,id):
     blog = await Blog.find(id)
     comments = await Comment.findall('blog_id=?', [id], orderBy='create_at desc')
+    comments = comments[::-1]
     for c in comments:
         c.html_content = text2html(c.content)
     blog.html_content = markdown2.markdown(blog.content)
@@ -332,6 +333,14 @@ async def api_delete_blog(request,*,id):
     check_admin(request)
     blog = await Blog.find(id)
     await blog.remove()
+    return dict(id=id)
+
+#后端API删除评论
+@post('/api/comments/{id}/delete')
+async def api_delete_comment(request,*,id):
+    check_admin(request)
+    comment = await Comment.find(id)
+    await comment.remove()
     return dict(id=id)
 
 #后端API获取评论列表，见manage_comments.html

@@ -1,92 +1,82 @@
 <!DOCTYPE html>
-<!--
-{% macro pagination(url, page) %}
-    <ul class="uk-pagination">
-        {% if page.has_previous %}
-            <li><a href="{{ url }}{{ page.page_index - 1 }}"><i class="uk-icon-angle-double-left"></i></a></li>
-        {% else %}
-            <li class="uk-disabled"><span><i class="uk-icon-angle-double-left"></i></span></li>
-        {% endif %}
-            <li class="uk-active"><span>{{ page.page_index }}</span></li>
-        {% if page.has_next %}
-            <li><a href="{{ url }}{{ page.page_index + 1 }}"><i class="uk-icon-angle-double-right"></i></a></li>
-        {% else %}
-            <li class="uk-disabled"><span><i class="uk-icon-angle-double-right"></i></span></li>
-        {% endif %}
-    </ul>
-{% endmacro %}
--->
 <html>
 <head>
-    <meta charset="utf-8" />
-    {% block meta %}<!-- block meta  -->{% endblock %}
-    <title>{% block title %} ? {% endblock %} - Awesome Python Webapp</title>
-    <link rel="stylesheet" href="/static/css/uikit.min.css">
-    <link rel="stylesheet" href="/static/css/uikit.gradient.min.css">
-    <link rel="stylesheet" href="/static/css/awesome.css" />
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/sha1.min.js"></script>
-    <script src="/static/js/uikit.min.js"></script>
-    <script src="/static/js/sticky.min.js"></script>
-    <script src="/static/js/vue.min.js"></script>
-    <script src="/static/js/awesome.js"></script>
-    {% block beforehead %}<!-- before head  -->{% endblock %}
+    <meta charset="utf-8">
+    {% block meta %}<!-- meta -->{% endblock %}
+    <title>{% block title %} ? {% endblock %} - Seieiblog</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/homepage.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/icomoon/style.css">
+    <link rel="shortcut icon" href="/static/img/wicon.ico">
+    <script type="text/javascript" src="/static/js/sha1.min.js"></script>
+    <script type="text/javascript" src="/static/js/vue2.1.8.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="/static/js/blog.js"></script>
+    <script type="text/javascript" src="/static/js/event.js"></script>
+    {% block beforehead %}<!-- beforehead -->{% endblock %}
 </head>
 <body>
-    <nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
-        <div class="uk-container uk-container-center">
-            <a href="/" class="uk-navbar-brand">WHosurDaddy</a>
-            <ul class="uk-navbar-nav">
-                <li data-url="blogs"><a href="/"><i class="uk-icon-home"></i> 首页</a></li>
-                <li><a href="/manage/blogs"><i class="uk-icon-edit"></i> 日志</a></li>
-                <li><a target="_blank" href="http://write.blog.csdn.net/postlist/6953798/all"><i class="uk-icon-book"></i> 源码笔记</a></li>
-                <li><a target="_blank" href="https://github.com/TAKEOFFMYUNDERWEAR/awesome-python-webapp"><i class="uk-icon-code"></i> 源码</a></li>
+    <div class="topbar">
+        <div class="topbartitle">
+            <h1>Seiei · Blog</h1>
+        </div>
+        <div class="topbarlist">
+            <div class="hid topbarlist_label fr"><a href="#"><i class="icon-menu3"></i></a></div>
+            <div id="topbarlist_small">
+            <ul class="topbarlist_fl fl">
+                <li><i></i><a href="/">首页</a></li>
+                <li><i></i><a href="/manage/blogs">日志</a></li>
             </ul>
-            <div class="uk-navbar-flip">
-                <ul class="uk-navbar-nav">
-                {% if __user__ %}
-                    <li class="uk-parent" data-uk-dropdown>
-                        <a href="#0"><i class="uk-icon-user"></i> {{ __user__.name }}</a>
-                        <div class="uk-dropdown uk-dropdown-navbar">
-                            <ul class="uk-nav uk-nav-navbar">
-                                <li><a href="/signout"><i class="uk-icon-sign-out"></i> 登出</a></li>
-                            </ul>
-                            <ul class="uk-nav uk-nav-navbar">
-                                <li><a href="/manage/blogs/create"><i class="uk-icon-edit"></i> 新日志</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                {% else %}
-                    <li><a href="/signin"><i class="uk-icon-sign-in"></i> 登陆</a></li>
-                    <li><a href="/register"><i class="uk-icon-edit"></i> 注册</a></li>
-                {% endif %}
-                </ul>
+            {% if __user__ %}
+            <ul class="topbarlist_signed fr">
+                <li class="signed">
+                    <a class="username" href="javascript:;">{{ __user__.name }}</a>
+                    <div class="userdropdownbar hid">
+                        <div class="triangle"></div>
+                        <ul>
+                            {% if __user__.admin %}
+                            <li><a href="/manage/blogs/create"><i class="icon-pencil"> </i>写博客</a></li>
+                            {% else %}
+                            <li><i class="icon-lock" id='lock'> 写博客</i></li>
+                            {% endif %}
+                            <li><a href="/manage/comments">后台管理</a></li>
+                            <li><a href="/signout">登出</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            {% else %}
+            <ul class="topbarlist_sign fr">
+                <li><a href="/signin">登陆</a></li>
+                <li><a href="/register">注册</a></li>
+            </ul>
+            {% endif %}  
+            </div>
+        </div>    
+    </div>
+    <div class="blogmessages">
+        <div class="userimage">
+            <img src="/static/img/7E4C4FBB2921B01DE6F312D40F8E9925B0C856C3_800.jpg" alt="博主头像">
+            <div class="welcome">
+                <p>欢迎来到我的个人博客网站</p>
             </div>
         </div>
-    </nav>
-
-    <div class="uk-container uk-container-center">
-        <div class="uk-grid">
-            <!-- content -->
-            {% block content %}
-            {% endblock %}
-            <!-- // content -->
+        <div class="messageslist">
+            <ul>
+                <li><a href="https://github.com/TAKEOFFMYUNDERWEAR target="_blank">我的Github <i class="icon-github"></i></a></li>
+                <li><a href="http://blog.csdn.net/qq_38801354" target="_blank">我的CSDN博客</a></li>
+                <li class="messageemail"><a href="javascript:;">我的邮箱</a></li>
+                <li><a href="#">关于本站</a></li>
+            </ul>
         </div>
+        <div class="messageclose"><i>x</i></div>
+        <div class="messagepull"><i>Pull</i></div>
     </div>
 
-    <div class="uk-margin-large-top" style="background-color:#eee; border-top:1px solid #ccc;">
-        <div class="uk-container uk-container-center uk-text-center">
-            <div class="uk-panel uk-margin-top uk-margin-bottom">
-                <p>
-                    <a target="_blank" href="http://weibo.com/u/5941233874/home?topnav=1&wvr=6" class="uk-icon-button uk-icon-weibo"></a>
-                    <a target="_blank" href="https://github.com/TAKEOFFMYUNDERWEAR" class="uk-icon-button uk-icon-github"></a>
-                </p>
-                <p>Powered by <a href="http://awesome.liaoxuefeng.com">Awesome Python Webapp</a>. Copyright &copy; 2014. [<a href="/manage/" target="_blank">Manage</a>]</p>
-                <p><a href="http://www.liaoxuefeng.com/" target="_blank">www.liaoxuefeng.com</a>. All rights reserved.</p>
-                <a target="_blank" href="http://www.w3.org/TR/html5/"><i class="uk-icon-html5" style="font-size:64px; color: #444;"></i></a>
-            </div>
-
-        </div>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
     </div>
+    
 </body>
 </html>

@@ -1,31 +1,35 @@
 {% extends '__base__.html' %}
 
-{% block title %}日志{% endblock %}
+{% block title %}首页{% endblock %}
+
+{% block beforehead %}
+<script type="text/javascript">
+    $(function(){
+        var $messagepull = $('.messagepull');
+        $messagepull.click();
+    });
+    $(function(){
+        var $topbarlistl = $('.topbarlist_fl li:first-child');
+        var $topbarlistr = $('.topbarlist_fl li:last-child');
+        $topbarlistl.addClass('active');
+        $topbarlistr.removeClass('active');
+    })
+</script>
+{% endblock %}
 
 {% block content %}
-
-    <div class="uk-width-medium-3-4">
-        {% for blog in blogs %}
-            <article class="uk-article">
-                <h2><a href="/blog/{{ blog.id }}">{{ blog.name }}</a></h2>
-                <p class="uk-article-meta">发表于{{ blog.create_at|datetime }}</p>
-                <p>{{ blog.summary }}</p>
-                <p><a href="/blog/{{ blog.id }}">继续阅读 <i class="uk-icon-angle-double-right"></i></a></p>
-            </article>
-            <hr class="uk-article-divider">
-        {% endfor %}
-    </div>
-
-    <div class="uk-width-medium-1-4">
-        <div class="uk-panel uk-panel-header">
-            <h3 class="uk-panel-title">友情链接</h3>
-            <ul class="uk-list uk-list-line">
-                <li><i class="uk-icon-thumbs-o-up"></i> <a target="_blank" href="#">编程</a></li>
-                <li><i class="uk-icon-thumbs-o-up"></i> <a target="_blank" href="#">读书</a></li>
-                <li><i class="uk-icon-thumbs-o-up"></i> <a target="_blank" href="#">Python教程</a></li>
-                <li><i class="uk-icon-thumbs-o-up"></i> <a target="_blank" href="#">Git教程</a></li>
-            </ul>
+    {% for blog in blogs %}
+    <div class="article">
+        <div class="article_name">
+            <h2><a href="/blog/{{ blog.id }}">&lt;&lt; {{ blog.name }} &gt;&gt;</a></h2>
+        </div>
+        <div class="artcile_summry">
+            <p>{{ blog.summary }}</p>
+        </div>
+        <div class="artcile_footer">
+            <div class="time fl">发表于{{ blog.create_at|datetime }}</div>
+            <div class="readbtn fr"><a href="/blog/{{ blog.id }}">阅读全文</a></div>
         </div>
     </div>
-
+    {% endfor %}
 {% endblock %}

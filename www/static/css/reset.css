@@ -1,0 +1,20 @@
+/* 
+    border: 1px black solid; 
+*/
+*{margin:0px;padding:0px;}
+body{font-size:16px;background-color: #f6f6f6;font-family: "Microsoft YaHei";}
+img{border:none;}
+input,select,textarea,button{outline: none;border:none;}
+button:hover{cursor:pointer;}
+textarea{resize:none;}
+a{text-decoration:none;color: #fff;}
+a:hover{color:#ff7e00;}
+li{list-style-type:none;}
+i{font-style:normal;-webkit-user-select: none;}
+i:hover{cursor:pointer;}
+.clearfix{overflow:auto;}
+.fl{float:left;}
+.fr{float:right;}
+.hid {
+    display: none;
+}
