@@ -18,7 +18,7 @@ if (! String.prototype.trim) {
     };
 }
 
-//没有toDateTime方法
+//制作toDateTime方法
 if (! Number.prototype.toDateTime) {
     var replaces = {
         'yyyy': function(dt) {
@@ -72,18 +72,19 @@ if (! Number.prototype.toDateTime) {
             return h < 12 ? 'AM' : 'PM';
         }
     };
-    var token = /([a-zA-Z]+)/;
     Number.prototype.toDateTime = function(format) {
-        var fmt = format || 'yyyy-MM-dd hh:mm:ss'
+        var fmt = format || 'yyyy-MM-dd hh:mm:ss';
         var dt = new Date(this * 1000);
-        var arr = fmt.split(token);
+        var arr = fmt.replace(/:/g,'-').replace(/\s/g,'-').split('-');//不能结合正则以及split对字符串操作，因为ie8有bug
         for (var i=0; i<arr.length; i++) {
             var s = arr[i];
             if (s && s in replaces) {
+                
                 arr[i] = replaces[s](dt);
             }
+
         }
-        return arr.join('');
+        return arr.slice(0,3).join('-') + ' ' + arr.slice(3,6).join(':');
     };
 }
 
@@ -223,27 +224,45 @@ function gotoPage(i) {
     location.assign('?' + $.param(r));
 }
 
-if (typeof(Vue)!=='undefined') {
-    Vue.component('pagination', {
-        props:['message'],
-        template: '<ul>' +
-                '<li v-if="! message.has_previous" class="noactive"><i class="icon-chevron-left"></i></li>' +
-                '<li v-if="message.has_previous"><a v-on:click="gotoPage(message.page_index-1)" href="#0"><i class="icon-chevron-left"></i></a></li>' +
-                '<li v-if="message.page_index-2 &gt; 0"><a v-on:click="gotoPage(message.page_index-2)" href="#0" v-text="message.page_index-2"></a></li>' + 
-                '<li v-if="message.page_index-1 &gt; 0"><a v-on:click="gotoPage(message.page_index-1)" href="#0" v-text="message.page_index-1"></a></li>' +
-                '<li class="activepage"><span v-text="message.page_index"></span></li>' +
-                '<li v-if="message.page_index+1 &lt; message.page_count || message.page_index+1 == message.page_count"><a v-on:click="gotoPage(message.page_index+1)" href="#0" v-text="message.page_index+1"></a></li>' + 
-                '<li v-if="message.page_index+2 &lt; message.page_count || message.page_index+2 == message.page_count"><a v-on:click="gotoPage(message.page_index+2)" href="#0" v-text="message.page_index+2"></a></li>' +
-                '<li v-if="!message.has_next" class="noactive"><i class="icon-chevron-right"></i></li>' +
-                '<li v-if="message.has_next"><a v-on:click="gotoPage(message.page_index+1)" href="#0"><i class="icon-chevron-right"></i></a></li>' +
-            '</ul>'
-    });//这里头使用v-on能绑定这个文件内的所有函数，然而在导入网页元素时并不能调用该网页初始化vue对象的函数，另外这里不能使用花括号所以定义文本内容要使用v-text
-}
-
 function postJSON(url, data, callback) {
     if (arguments.length===2) {
         callback = data;
         data = {};
     }
     _httpJSON('POST', url, data, callback);
+}
+
+/* 页码 */
+function makepage (message) {
+    var 
+        $page = $('.page'),
+        nohas_previous = (!message.has_previous) ? ('<li class="noactive"><i class="icon-chevron-left"></i></li>') : (''),
+        has_previous = (message.has_previous) ? ('<li><a href="#0" data-page="' + (message.page_index-1) + '"><i class="icon-chevron-left"></i></a></li>') : (''),
+        page_m2 = (message.page_index-2 > 0) ? ('<li><a href="#0" data-page="' + (message.page_index-2) + '">' + (message.page_index-2) + '</a></li>') : (''),
+        page_m1 = (message.page_index-1 > 0) ? ('<li><a href="#0" data-page="' + (message.page_index-1) + '">' + (message.page_index-1) + '</a></li>') : (''),
+        pageactive = '<li class="activepage"><span>' + message.page_index + '</span></li>',
+        page_a1 = (message.page_index+1 < message.page_count || message.page_index+1 == message.page_count) ? ('<li><a href="#0" data-page="' + (message.page_index+1) + '">'+ (message.page_index+1) +'</a></li>'):(''),
+        page_a2 = (message.page_index+2 < message.page_count || message.page_index+2 == message.page_count) ? ('<li><a href="#0" data-page="' + (message.page_index+2) + '">'+ (message.page_index+2) +'</a></li>'):(''),
+        nohas_next = (!message.has_next) ? ('<li class="noactive"><i class="icon-chevron-right"></i></li>') : (''),
+        has_next = (message.has_next) ? ('<li><a href="#0" data-page="' + (message.page_index+1) + '"><i class="icon-chevron-right"></i></a></li>') : (''),
+        $template = '<ul>' + nohas_previous + has_previous + page_m2 + page_m1 + pageactive + page_a1 + page_a2 + nohas_next + has_next +'</ul>';
+    $page.append($template);
+    var $pagelink = $('.page a');
+    $pagelink.click(function(){
+        gotoPage($(this).data('page'));
+    })
+}
+
+/*  */
+function changetotext (content) {
+    content = content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return content
+}
+/*  */
+function stopDefault(event){
+ if ( event && event.preventDefault ){ 
+    event.preventDefault();
+} else { 
+    window.event.returnValue = false;
+} 
 }

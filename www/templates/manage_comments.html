@@ -3,44 +3,48 @@
 {% block title %}评论列表{% endblock %}
 
 {% block beforehead %}
-
 <script type="text/javascript">
-    function initVM (data) {
-        var vm = new Vue({
-            el:'#vm',
-            data:{
-                comments:data.comments,
-                page:data.page
-            },
-            methods:{
-                delete_comment:function(comment){
-                    var content = comment.content.length>20 ? comment.content.substring(0,20)+'...' : comment.content;
-                    if (confirm('确定删除评论“'+ content + '”?')) {
-                    postJSON('/api/comments/' + comment.id + '/delete', function (err, r) {
-                        if (err) {
-                            return error(err);
-                        }
-                        refresh();
-                    });
+    function initcomment (data) {
+        var 
+            comments = data.comments,
+            $table = $('.commentlist_table table'),
+            i,$tr,$commentname,$commentcontent,$commenttime;
+        for (i=0;i<comments.length;i++) {
+            $tr = $('<tr>');
+            $tr.append('<td><span>' + comments[i].user_name + '</span></td>');
+            $tr.append('<td  style="max-width:618px"><span>' + changetotext(comments[i].content) + '</span></td>');
+            $tr.append('<td><span>' + comments[i].create_at.toDateTime() + '</span></td>');
+            {% if __user__.admin %}
+            $tr.append('<td><a href="#0" class="delete_comment" data-id="'+ comments[i].id +'"><i class="icon-bin"></i></a></td>');
+            {% else %}
+            $tr.append('<td><i class="icon-lock"> 没有权限</i></td>');
+            {% endif %}
+            $table.append($tr);
+        }
+        var 
+            $delete_comment = $('.delete_comment'),
+            $commentlist_title = $('.commentlist_title a');
+        $delete_comment.click(function(){
+            if (confirm('确定删除评论？')) {
+                postJSON('/api/comments/' + $(this).data('id') + '/delete',function(err,r){
+                    if (err) {
+                        return alert(err.message || err.error || err);
                     }
-                },
-                change:function(){
-                    $('.commentlist_title a').text('{ { 点击切换管理用户列表 } }');
-                },
-                repair:function(){
-                    $('.commentlist_title a').text('{ { 评论列表 } }');
-                }
+                    refresh();
+                })
             }
         });
+        $commentlist_title.mouseenter(function(){$(this).text('{ { 点击切换管理用户列表 } }');}).mouseleave(function(){$(this).text('{ { 评论列表 } }');});
     }
     $(function(){
         getJSON('/api/comments',{
             page:{{ page_index }}
         },function(err,r){
             if (err) {
-                return $('#vm').showFormError(err);
+                return $('#vm'),showFormError(err);
             }
-            initVM(r);
+            initcomment(r);
+            makepage(r.page);
         })
     })
 </script>
@@ -51,7 +55,7 @@
 <div class="content-container">
 <div class="commentlist" id="vm">
     <div class="commentlist_title">
-        <h1><a id="iddd" href="/manage/users"  v-on:mouseenter="change" v-on:mouseleave="repair">{ { 评论列表 } }</a></h1>
+        <h1><a id="iddd" href="/manage/users">{ { 评论列表 } }</a></h1>
         <div class="Formerror"></div>
     </div>
     <div class="commentlist_table">
@@ -62,19 +66,8 @@
                 <th>评论时间</th>
                 <th>操作</th>
             </tr>
-            <tr v-for="comment in comments">
-                <td><span v-text="comment.user_name"></span></td>
-                <td style="max-width:618px"><span v-text="comment.content"></span></td>
-                <td><span v-text="comment.create_at.toDateTime()"></span></td>
-                {% if __user__.admin %}
-                <td><a href="#0" v-on:click='delete_comment(comment)'><i class="icon-bin"></i></a></td>
-                {% else %}
-                <td><i class="icon-lock"> 没有权限</i></td>
-                {% endif %}
-            </tr>
         </table>
         <div class="page">
-            <pagination v-bind:message='page'></pagination>
         </div>
     </div>
 </div>

@@ -4,56 +4,55 @@
 
 {% block beforehead %}
 <script type="text/javascript">
-    var 
-        ID = '{{ id }}' ,
-        action = '{{ action }}';
-    function initVM(blog) {
-        var vm = new Vue({
-            el:'#vm',
-            data:blog,
-            methods:{
-                submit:function(event){
-                    event.preventDefault();
-                    var $form = $('#vm');
-                    if (! this.name.trim()) {
-                        return $form.showFormError('请输入题目');
-                    }
-                    if (! this.content.trim()) {
-                        return $form.showFormError('请输入内容');
-                    }
-                    $form.postJSON(action,this.$data,function(err,r){
-                        if (!err) {
-                            return location.assign('/manage/blogs');
-                        }
-                    })
-                }
-            }
-        })
-    }
-    $(function(){
-        if (ID) {
-            getJSON('/api/blogs/'+ID,function(err,blog){
-                if (err) {
-                    var $form = $('#vm');
-                    return $form.showFormError(err);
-                }
-                initVM(blog);
-            });
-        }
-        else {
-            initVM({
-                name:'',
-                summary:'',
-                content:''
-            });
-        }
-    })
-    $(function(){
+        /* 用于头部导航栏样式 */
+        $(function(){
         var $topbarlistl = $('.topbarlist_fl li:first-child');
         var $topbarlistr = $('.topbarlist_fl li:last-child');
         $topbarlistl.removeClass('active');
         $topbarlistr.addClass('active');
     })
+        $(function(){
+            /* 定义提交按钮 */
+            var 
+                ID = '{{ id }}',
+                action = '{{ action }}',
+                $btn = $('#vm button'),
+                $form = $('#vm'),
+                $blogname = $('#blogName'),
+                $blogsummary = $('#blogSummary'),
+                $blogcontent = $('#blogcontent');
+            $btn.click(function(event){
+                stopDefault(event);
+                if (! $blogname.val().trim()) {
+                    return $form.showFormError('请输入题目');
+                }
+                if (! $blogcontent.val().trim()) {
+                    return $form.showFormError('请输入内容');
+                }
+                $form.postJSON(action,{
+                    name:$blogname.val(),
+                    summary:$blogsummary.val(),
+                    content:$blogcontent.val()
+                },function(err,r){
+                    return location.assign('/manage/blogs');
+                });
+            });
+            if (ID) {
+                getJSON('/api/blogs/'+ID,function(err,blog){
+                    if (err) {
+                        return $form.showFormError(err);
+                    }
+                    $blogname.val(blog.name);
+                    $blogsummary.val(blog.summary);
+                    $blogcontent.val(blog.content);
+                });
+            } else {
+                $blogname.val('');
+                $blogsummary.val('');
+                $blogcontent.val('');
+            }
+        });
+
 </script>
 {% endblock %}
 
@@ -64,16 +63,16 @@
         <div class="Formerror"></div>
         <div>
             <label for="blogName"><h1>{ { 标题 } }</h1></label>
-            <input type="text" name="blogName" id="blogName" placeholder="文章标题" v-model='name'></div>
+            <input type="text" name="blogName" id="blogName" placeholder="文章标题"></div>
         <div>                
             <label for="blogSummary"><h1>{ { 摘要 } }</h1></label>
-            <textarea id="blogSummary" placeholder="文章摘要" rows="5" v-model='summary'></textarea>
+            <textarea id="blogSummary" placeholder="文章摘要" rows="5"></textarea>
         </div>
         <div>                
             <label for="blogcontent"><h1>{ { 内容 } }</h1></label>
-            <textarea id="blogcontent" placeholder="文章内容"  rows="20" v-model='content'></textarea>
+            <textarea id="blogcontent" placeholder="文章内容"  rows="20"></textarea>
         </div>
-        <button type="submit" v-on:click='submit'>保存</button>
+        <button type="submit">保存</button>
         <a href="#">取消</a>
     </form>
 </div>

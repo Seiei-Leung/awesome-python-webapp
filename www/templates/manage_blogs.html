@@ -4,45 +4,61 @@
 
 {% block beforehead %}
 <script type="text/javascript">
-function initVM(data) {
-    var vm = new Vue({
-        el: '#vm',
-        data: {
-            blogs: data.blogs,
-            page: data.page
-        },
-        methods: {
-            edit_blog: function (blog) {
-                location.assign('/manage/blogs/edit?id=' + blog.id);
-            },
-            delete_blog: function (blog) {
-                if (confirm('确认要删除文章《' + blog.name + '》？')) {
-                    postJSON('/api/blogs/' + blog.id + '/delete', function (err, r) {
-                        if (err) {
-                            return alert(err.message || err.error || err);
-                        }
-                        refresh();
-                    });
-                    
-                }
-            },
+    /* 管理博客 */
+    function initblog (data) {
+        var 
+            blogs = data.blogs,
+            $table = $('.bloglist_table table'),
+            i,$tr,$blogname,$blogtime,$blognametd,$blogtimetd;
+            for (i=0;i<data.blogs.length;i++) {
+                $tr = $('<tr>');
+                $blogname = $('<a>',{'href':'/blog/'+data.blogs[i].id}).text('<< ' + data.blogs[i].name + ' >>');
+                $blogtime = $('<span>').text(data.blogs[i].create_at.toDateTime());
+                $blognametd = $('<td>').append($blogname);
+                $blogtimetd = $('<td>').append($blogtime);
+                $tr.append($blognametd).append($blogtimetd);
+                {% if __user__.admin %}
+                $tr.append('<td><a href="#0" class="edit_blogs" data-id="' + blogs[i].id + '"><i class="icon-pencil"> </i></a>&nbsp;&nbsp;&nbsp;<a href="#0" class="delete_blog" data-id="' + blogs[i].id + '"><i class="icon-bin"></i></a></td>');
+                {% else %}
+                $tr.append('<td><i class="icon-lock"> 没有权限</i></td>');
+                {% endif %}
+                $table.append($tr);
+            }
+            var 
+                $edit_blog = $('.edit_blogs'),
+                $delete_blog = $('.delete_blog');
+                $edit_blog.click(function(){
+                    location.assign('/manage/blogs/edit?id=' + $(this).data('id'));
+                });
+                $delete_blog.click(function(){
+                    if (confirm('确认要删除文章?'+$(this).data('id'))) {
+                        postJSON('/api/blogs/' + $(this).data('id') + '/delete', function (err, r) {
+                            if (err) {
+                                return alert(err.message || err.error || err);
+                            }
+                            refresh();
+                        });
+                    }
+                });
         }
-    });
-}
-$(function(){
-    getJSON('/api/blogs',{
-        page:{{ page_index }}
-    },function(err,r){
-        if (err) {
-            var $vm = $('#vm');
-            return $vm.showFormError(err);
-        }
-        initVM(r);
-    });
-});
-$(function(){
-    var $topbarlistl = $('.topbarlist_fl li:first-child');
-    var $topbarlistr = $('.topbarlist_fl li:last-child');
+    /* 初始化管理列表 */
+    $(function(){
+        getJSON('/api/blogs',{
+            page:{{ page_index }}
+        },function(err,r){
+            if (err) {
+                return $('#vm').showFormError(err);
+            }
+            initblog(r);
+            makepage(r.page);/* 生成页码 */
+        });
+
+    })
+    /* 导航栏按钮样式 */
+    $(function(){
+    var 
+        $topbarlistl = $('.topbarlist_fl li:first-child'),
+        $topbarlistr = $('.topbarlist_fl li:last-child');
     $topbarlistl.removeClass('active');
     $topbarlistr.addClass('active');
 })
@@ -64,20 +80,8 @@ $(function(){
                 <th>创建时间</th>
                 <th>操作</th>
             </tr>
-            <tr v-for="blog in blogs">
-                <td>
-                    <a v-bind:href="'/blog/'+blog.id" v-text="'&lt;&lt; ' + blog.name + ' &gt;&gt;'"></a>
-                </td>
-                <td><span v-text="blog.create_at.toDateTime()"></span></td>
-                {% if __user__.admin %}
-                <td><a href="#0" v-on:click='edit_blog(blog)'><i class="icon-pencil"> </i></a>&nbsp;&nbsp;&nbsp;<a href="#0" v-on:click='delete_blog(blog)'><i class="icon-bin"></i></a></td>
-                {% else %}
-                <td><i class="icon-lock"> 没有权限</i></td>
-                {% endif %}
-            </tr>
         </table>
         <div class="page">
-            <pagination v-bind:message='page'></pagination>
         </div>
     </div>
 </div>

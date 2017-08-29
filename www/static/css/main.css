@@ -1,5 +1,11 @@
 body{
-    background-image: url('https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1502785013&di=308b4eabe00915ff64cbc717cdf503e4&src=http%3A%2F%2Fwww.cdsns.com%2Fuploads%2Fimg%2F201603%2F04%2Fac091d0bf64376fed43dd26919289cfe_l.jpg');
+    background-image: url('https://desktop.github.com/images/star-bg.svg'),linear-gradient(#191c20, #24292e 15%);
+    background-repeat:repeat;
+    background-position: center 0, 0 0, 0 0;
+}
+
+body{
+    background-image: url('https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1502785013&di=308b4eabe00915ff64cbc717cdf503e4&src=http%3A%2F%2Fwww.cdsns.com%2Fuploads%2Fimg%2F201603%2F04%2Fac091d0bf64376fed43dd26919289cfe_l.jpg')\9;
 }
 /*---- 顶上固定菜单栏 ----*/
 .topbar {
@@ -204,6 +210,7 @@ body{
     color: #ff7e00;
     font: 20px/30px bold;
     background-color:rgba(0,0,0,0.6);
+    background-color: #333\9;
     width: 260px;
     margin:auto;
     border-radius: 50px;
@@ -218,12 +225,13 @@ body{
 }
 .messageslist_active {
     background-color: rgba(0,0,0,0.6);
+    background-color: #333\9;
     border-radius: 5px;
 }
 .messageclose{
     position: absolute;
-    top:0px;
-    right: 0px;
+    top:1px;
+    right: 1px;
     width: 0px;
     height: 0px;
     border-right: 15px solid #ff7e00;
@@ -618,6 +626,7 @@ body{
     max-width: 1000px;
     margin:100px auto;
     margin-bottom: 0px;
+    margin-bottom: 15px\9;
     border-radius: 4px;
     box-shadow:  15px 5px 30px 1px rgba(0,0,0,0.4);
 }
@@ -658,6 +667,15 @@ body{
 .bloglist_table tr:nth-child(n+2):hover,.userlist_table tr:nth-child(n+2):hover,.commentlist_table tr:nth-child(n+2):hover{
     background-color:#ff9e3f;
 }
+.bloglist_table tr:hover,.userlist_table tr:hover,.commentlist_table tr:hover{
+    background-color:#ff9e3f\9;
+}
+.bloglist_table tr:first-child:hover,.userlist_table tr:first-child:hover,.commentlist_table tr:first-child:hover{
+    background-color:#ccc\9;
+}
+.bloglist_table tr:first-child,.userlist_table tr:first-child,.commentlist_table tr:first-child{
+    background-color:#ccc\9;
+}
 .bloglist_table th,,.userlist_table th,.commentlist_table th{
     color:#333;
 }
@@ -693,4 +711,10 @@ body{
 }
 .page li:not(.activepage):not(.noactive):hover {
     background-color:  #ff9e3f;
+}
+.page li:hover {
+    background-color:  #ff9e3f\9;
+}
+.page .noactive:hover {
+    background-color: #ccc\9;
 }

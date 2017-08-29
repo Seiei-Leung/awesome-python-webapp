@@ -4,31 +4,37 @@
 
 {% block beforehead %}
 <script type="text/javascript">
-    function initVM(data){
-        var vm = new Vue({
-            el:'#vm',
-            data:{
-                users:data.users,
-                page:data.page
-            },
-            methods:{
-                change:function(){
-                    $('.userlist_title a').text('{ { 点击切换管理评论列表 } }');
-                },
-                repair:function(){
-                    $('.userlist_title a').text('{ { 用户列表 } }');
-                }
+    function initusers (data) {
+        var
+            users = data.users,
+            $table = $('.userlist_table table'),
+            i,$tr,$username,$useremail,$usertime;
+        {% if __user__.admin %}
+        for (i=0;i<users.length;i++) {
+            $tr = $('<tr>');
+            if (users[i].admin) {
+                $tr.append('<td><span>'+ users[i].name +'</span>&nbsp;<span class="icon-key" style="color:#870000"></span></td>');
+            } else {
+                $tr.append('<td><span>'+ users[i].name +'</span></td>');
             }
-        });
+            $tr.append('<td><span>' + users[i].email + '</span></td>');
+            $tr.append('<td><span>' + users[i].create_at.toDateTime() + '</span></td>');
+            $table.append($tr);
+        }
+        {% else %}
+        $table.append('<tr><td colspan="3" height="80px"><i class="icon-lock"> 抱歉，你没有权限查看</i></td></tr>');
+        {% endif %}
     }
     $(function(){
         getJSON('/api/users',{
             page:{{ page_index }}
         },function(err,r){
             if (err) {
-                return $('#vm').showFormError('err'); 
+                return $('#vm').showFormError;
             }
-            initVM(r);
+            initusers(r);
+            makepage(r.page);
+            $('.userlist_title a').mouseenter(function(){$(this).text('{ { 点击切换管理评论列表 } }');}).mouseleave(function(){$(this).text('{ { 用户列表 } }');})
         })
     })
 </script>
@@ -38,7 +44,7 @@
 <div class="content-container">
 <div class="userlist" id="vm">
     <div class="userlist_title">
-        <h1><a href="/manage/comments" v-on:mouseenter="change" v-on:mouseleave="repair">{ { 用户列表 } }</a></h1>
+        <h1><a href="/manage/comments">{ { 用户列表 } }</a></h1>
         <div class="Formerror"></div>
     </div>
     <div class="userlist_table">
@@ -48,20 +54,8 @@
                 <th>电子邮箱</th>
                 <th>注册时间</th>
             </tr>
-            {% if __user__.admin %}
-            <tr v-for="user in users">
-                <td><span v-text="user.name"></span>&nbsp;<span v-if="user.admin" class="icon-key" style="color:#870000"></span></td>
-                <td><span v-text="user.email"></span></td>
-                <td><span v-text="user.create_at.toDateTime()"></span></td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="3" height='80px'><i class="icon-lock"> 抱歉，你没有权限查看</i></td>
-            </tr>
-            {% endif %}
         </table>
         <div class="page">
-            <pagination v-bind:message='page'></pagination>
         </div>
     </div>
 </div>

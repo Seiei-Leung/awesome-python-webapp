@@ -5,28 +5,21 @@
 {% block beforehead %}
     <script type="text/javascript">
         $(function(){
-            var vmsignin = new Vue({
-                el:'#vm',
-                data:{
-                    email:'',
-                    passwd1:''
-                },
-                methods:{
-                    submit:function(event){
-                        event.preventDefault();
-                        $form = $('#vm');//注意这个$('#vm')与this(Vue对象)的区别,这个this是指向表单元素此处用于找位置显示错误信息，而vue对象则是输出name以及passwd
-                        email = this.email.trim().toLowerCase();
-                        passwd = this.passwd1==='' ? '' : CryptoJS.SHA1(email + ':' + this.passwd1).toString();
-                        $form.postJSON('/api/authenticate',{
-                            email:email,
-                            passwd:passwd,
-                        },function(err,r){
-                            if (!err) {
-                                return location.assign('/');
-                            }
-                        })
+            var $btn = $('.rosFormbottom button');
+            $btn.click(function(event){
+                stopDefault(event);
+                var 
+                    $form = $('#vm'),
+                    $email = $('#rosEmail').val().trim().toLowerCase(),
+                    $passwd = $('#ros_pw').val()==='' ? '' : CryptoJS.SHA1($email + ':' + $('#ros_pw').val()).toString();
+                $form.postJSON('/api/authenticate',{
+                    email:$email,
+                    passwd:$passwd,
+                },function(err,r){
+                    if (!err) {
+                        return location.assign('/')
                     }
-                }
+                })
             })
         })
         $(function(){
@@ -44,13 +37,13 @@
             <form id="vm">
                 <div class="Formerror"></div>
                 <div>
-                    <label for="rosEmail">电子邮箱：</label><input v-model="email" type="text" name="rosEmail" id="rosEmail" placeholder="请输入你的个人邮箱">
+                    <label for="rosEmail">电子邮箱：</label><input type="text" name="rosEmail" id="rosEmail" placeholder="请输入你的个人邮箱">
                 </div>
                 <div>
-                    <label for="ros_pw">输入密码：</label><input v-model="passwd1" type="password" name="ros_pw" id="ros_pw" placeholder="请输入你的密码口令">
+                    <label for="ros_pw">输入密码：</label><input type="password" name="ros_pw" id="ros_pw" placeholder="请输入你的密码口令">
                 </div>
                 <div class="rosFormbottom">
-                    <button type="submit" v-on:click='submit'>登录</button>
+                    <button type="submit">登录</button>
                 </div>
             </form>
         </div>

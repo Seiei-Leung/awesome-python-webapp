@@ -1,17 +1,17 @@
 /* 顶上栏 */
 $(function(){
     var 
-        $topbarlist_signed = $('.topbarlist_signed'),
+        $signed = $('.signed'),
         $username = $('.username'),
-        $userdropdownbar = $('#userdropdownbar'),
-        $userdropdownbarli = $('#userdropdownbar li'),
+        $userdropdownbar = $('.userdropdownbar'),
+        $userdropdownbarli = $('.userdropdownbar li'),
         $messageslistli = $('.messageslist li');
-    $topbarlist_signed.mouseenter(function(){
+    $signed.mouseenter(function(){
         $username.css('color','#ff7e00');
-        $userdropdownbar.show();
+        $userdropdownbar.removeClass('hid');
     }).mouseleave(function(){
         $username.css('color','#fff');
-        $userdropdownbar.hide();
+        $userdropdownbar.addClass('hid');
     })
     $userdropdownbarli.mouseenter(function(){
         $userdropdownbarli.removeClass('active').find('a').css('color','#fff');
@@ -61,8 +61,6 @@ $(function(){
 
     /*---- 检测开始时可视窗口大小 ----*/
     var 
-        $html = $('html');/* 定义图像大小，以备背景不伸缩 */
-        $html.css('min-height',$(window).height());
         $topbartitle = $('.topbartitle'),
         animate_time = true,//用于窗口缩放时，不重复执行关闭左侧栏操作
         $topbarlist_small = $('#topbarlist_small'),
@@ -99,10 +97,12 @@ $(function(){
     $topbarlist_label.click(function(){
         $topbarlist_small.toggleClass('hid');
         if ($topbarlist_small.hasClass('hid')) {
-            $topbarlist_label_i.removeClass('icon-cancel-circle').addClass('icon-menu3');
+            $topbarlist_label_i.removeClass('icon-cancel-circle').addClass('icon-menu3')
         } else {
-            $topbarlist_label_i.removeClass('icon-menu3').addClass('icon-cancel-circle');
+            $topbarlist_label_i.removeClass('icon-menu3').addClass('icon-cancel-circle')
         }
     })
 })
 
+
+/* 后台管理，用户与评论链接内容切换 */

@@ -6,23 +6,23 @@
 <script type="text/javascript">
     var comment_url = '/api/blogs/{{ blog.id }}/comments';
     $(function(){
-        var vm = new Vue({
-            el:'#vm',
-            data:{content:''},
-            methods:{submit:function(event){
-                event.preventDefault();
-                var $form = $('#vm');
-                if (! this.content.trim()) {
-                    return $form.showFormError('请输入内容');
+        $comment_btn = $('#vm button'),
+        $form = $('#vm'),
+        $writecomment = $('#writecomment');
+        $comment_btn.click(function(event){
+            stopDefault(event);
+            if (! $writecomment.val().trim()) {
+                return $form.showFormError("请输入内容")
+            }
+            $form.postJSON(comment_url,{
+                content:$writecomment.val()
+            },function(err,r){
+                if (!err) {
+                    return refresh();
                 }
-                $form.postJSON(comment_url, {content:this.content},function(err,r){
-                    if (!err) {
-                        return refresh();
-                    }
-                })
-            }}
-        })
-    })
+            });
+        });
+    });
     $(function(){
         var $topbarlistl = $('.topbarlist_fl li:first-child');
         var $topbarlistr = $('.topbarlist_fl li:last-child');
@@ -73,8 +73,8 @@
             <div class="Formerror"></div>
             <label for="writecomment"><h1>{ { 发表评论 } }</h1></label>
             <div class="rFormerror"></div>
-            <textarea v-model='content' id="writecomment" rows="4"></textarea>
-            <button v-on:click='submit'>提交</button>
+            <textarea id="writecomment" rows="4"></textarea>
+            <button type='submit'>提交</button>
         </form>
     </div>
     {% endif %}

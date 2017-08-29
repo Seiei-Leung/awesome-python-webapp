@@ -3,6 +3,13 @@
 {% block title %}首页{% endblock %}
 
 {% block beforehead %}
+<!--[if lte IE 8]>
+<script type="text/javascript">
+    $(function(){
+        alert('老铁，你的浏览器版本有点低，建议更新过后再来，本网站为低版本只提供最基本的功能')
+    })
+</script>
+<![endif]-->
 <script type="text/javascript">
     $(function(){
         var $messagepull = $('.messagepull');
