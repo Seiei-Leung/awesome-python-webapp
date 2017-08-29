@@ -48,7 +48,7 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="content-container">
 <div class="commentlist" id="vm">
     <div class="commentlist_title">
         <h1><a id="iddd" href="/manage/users"  v-on:mouseenter="change" v-on:mouseleave="repair">{ { 评论列表 } }</a></h1>
@@ -64,7 +64,7 @@
             </tr>
             <tr v-for="comment in comments">
                 <td><span v-text="comment.user_name"></span></td>
-                <td><span v-text="comment.content"></span></td>
+                <td style="max-width:618px"><span v-text="comment.content"></span></td>
                 <td><span v-text="comment.create_at.toDateTime()"></span></td>
                 {% if __user__.admin %}
                 <td><a href="#0" v-on:click='delete_comment(comment)'><i class="icon-bin"></i></a></td>
@@ -78,5 +78,5 @@
         </div>
     </div>
 </div>
-
+</div>
 {% endblock %}

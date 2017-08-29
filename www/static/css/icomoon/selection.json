@@ -17,13 +17,13 @@
       "attrs": [],
       "properties": {
         "id": 7,
-        "order": 6,
+        "order": 11,
         "prevSize": 24,
         "code": 59648,
         "name": "chevron-right"
       },
       "setIdx": 0,
-      "setId": 3,
+      "setId": 2,
       "iconIdx": 6
     },
     {
@@ -42,13 +42,13 @@
       "attrs": [],
       "properties": {
         "id": 8,
-        "order": 5,
+        "order": 12,
         "prevSize": 24,
         "code": 59649,
         "name": "chevron-left"
       },
       "setIdx": 0,
-      "setId": 3,
+      "setId": 2,
       "iconIdx": 7
     },
     {
@@ -69,12 +69,12 @@
       "properties": {
         "ligatures": "pencil, write",
         "name": "pencil",
-        "order": 19,
+        "order": 2,
         "id": 6,
         "prevSize": 32,
         "code": 59653
       },
-      "setIdx": 2,
+      "setIdx": 1,
       "setId": 1,
       "iconIdx": 5
     },
@@ -97,12 +97,12 @@
       "properties": {
         "ligatures": "key, password",
         "name": "key",
-        "order": 21,
+        "order": 3,
         "id": 142,
         "prevSize": 32,
         "code": 59789
       },
-      "setIdx": 2,
+      "setIdx": 1,
       "setId": 1,
       "iconIdx": 141
     },
@@ -125,12 +125,12 @@
       "properties": {
         "ligatures": "lock, secure",
         "name": "lock",
-        "order": 34,
+        "order": 9,
         "id": 144,
         "prevSize": 32,
         "code": 59791
       },
-      "setIdx": 2,
+      "setIdx": 1,
       "setId": 1,
       "iconIdx": 143
     },
@@ -156,12 +156,12 @@
       "properties": {
         "ligatures": "bin, trashcan",
         "name": "bin",
-        "order": 32,
+        "order": 10,
         "id": 173,
         "prevSize": 32,
         "code": 59820
       },
-      "setIdx": 2,
+      "setIdx": 1,
       "setId": 1,
       "iconIdx": 172
     },
@@ -185,12 +185,12 @@
       "properties": {
         "ligatures": "menu3, options3",
         "name": "menu3",
-        "order": 33,
+        "order": 8,
         "id": 192,
         "prevSize": 32,
         "code": 59839
       },
-      "setIdx": 2,
+      "setIdx": 1,
       "setId": 1,
       "iconIdx": 191
     },
@@ -214,14 +214,69 @@
       "properties": {
         "ligatures": "cancel-circle, close",
         "name": "cancel-circle",
-        "order": 24,
+        "order": 6,
         "id": 270,
         "prevSize": 32,
         "code": 59917
       },
-      "setIdx": 2,
+      "setIdx": 1,
       "setId": 1,
       "iconIdx": 269
+    },
+    {
+      "icon": {
+        "paths": [
+          "M1014.662 822.66c-0.004-0.004-0.008-0.008-0.012-0.010l-310.644-310.65 310.644-310.65c0.004-0.004 0.008-0.006 0.012-0.010 3.344-3.346 5.762-7.254 7.312-11.416 4.246-11.376 1.824-24.682-7.324-33.83l-146.746-146.746c-9.148-9.146-22.45-11.566-33.828-7.32-4.16 1.55-8.070 3.968-11.418 7.31 0 0.004-0.004 0.006-0.008 0.010l-310.648 310.652-310.648-310.65c-0.004-0.004-0.006-0.006-0.010-0.010-3.346-3.342-7.254-5.76-11.414-7.31-11.38-4.248-24.682-1.826-33.83 7.32l-146.748 146.748c-9.148 9.148-11.568 22.452-7.322 33.828 1.552 4.16 3.97 8.072 7.312 11.416 0.004 0.002 0.006 0.006 0.010 0.010l310.65 310.648-310.65 310.652c-0.002 0.004-0.006 0.006-0.008 0.010-3.342 3.346-5.76 7.254-7.314 11.414-4.248 11.376-1.826 24.682 7.322 33.83l146.748 146.746c9.15 9.148 22.452 11.568 33.83 7.322 4.16-1.552 8.070-3.97 11.416-7.312 0.002-0.004 0.006-0.006 0.010-0.010l310.648-310.65 310.648 310.65c0.004 0.002 0.008 0.006 0.012 0.008 3.348 3.344 7.254 5.762 11.414 7.314 11.378 4.246 24.684 1.826 33.828-7.322l146.746-146.748c9.148-9.148 11.57-22.454 7.324-33.83-1.552-4.16-3.97-8.068-7.314-11.414z"
+        ],
+        "tags": [
+          "cross",
+          "cancel",
+          "close",
+          "quit",
+          "remove"
+        ],
+        "defaultCode": 59919,
+        "grid": 16,
+        "attrs": []
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "cross, cancel",
+        "name": "cross",
+        "order": 5,
+        "id": 272,
+        "prevSize": 32,
+        "code": 59919
+      },
+      "setIdx": 1,
+      "setId": 1,
+      "iconIdx": 271
+    },
+    {
+      "icon": {
+        "paths": [
+          "M512 864v-320l-320 320v-704l320 320v-320l352 352z"
+        ],
+        "tags": [
+          "forward",
+          "player"
+        ],
+        "defaultCode": 59936,
+        "grid": 16,
+        "attrs": []
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "forward3, player12",
+        "name": "forward3",
+        "order": 4,
+        "id": 289,
+        "prevSize": 32,
+        "code": 59936
+      },
+      "setIdx": 1,
+      "setId": 1,
+      "iconIdx": 288
     },
     {
       "icon": {
@@ -242,12 +297,12 @@
       "properties": {
         "ligatures": "github, brand40",
         "name": "github",
-        "order": 29,
+        "order": 7,
         "id": 433,
         "prevSize": 32,
         "code": 60080
       },
-      "setIdx": 2,
+      "setIdx": 1,
       "setId": 1,
       "iconIdx": 432
     }

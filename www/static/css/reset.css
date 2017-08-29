@@ -18,3 +18,32 @@ i:hover{cursor:pointer;}
 .hid {
     display: none;
 }
+code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #ccc;
+    border-radius: 4px;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+blockquote {
+    padding: 10px 20px;
+    margin: 1em 40px 1em 40px;
+    border-left: 5px solid #eee;
+    display: block;
+    background-color: #ccc;
+}
+pre {
+    display: block;
+    padding: 9.5px;
+    margin: 5px 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}

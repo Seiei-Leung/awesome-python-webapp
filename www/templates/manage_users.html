@@ -35,6 +35,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="content-container">
 <div class="userlist" id="vm">
     <div class="userlist_title">
         <h1><a href="/manage/comments" v-on:mouseenter="change" v-on:mouseleave="repair">{ { 用户列表 } }</a></h1>
@@ -63,5 +64,6 @@
             <pagination v-bind:message='page'></pagination>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

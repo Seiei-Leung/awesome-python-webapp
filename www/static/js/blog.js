@@ -1,16 +1,17 @@
 /* 顶上栏 */
 $(function(){
-    var $signed = $('.signed');
-    var $username = $('.username');
-    var $userdropdownbar = $('.userdropdownbar');
-    var $userdropdownbarli = $('.userdropdownbar li');
-    var $messageslistli = $('.messageslist li');
-    $signed.mouseenter(function(){
+    var 
+        $topbarlist_signed = $('.topbarlist_signed'),
+        $username = $('.username'),
+        $userdropdownbar = $('#userdropdownbar'),
+        $userdropdownbarli = $('#userdropdownbar li'),
+        $messageslistli = $('.messageslist li');
+    $topbarlist_signed.mouseenter(function(){
         $username.css('color','#ff7e00');
-        $userdropdownbar.removeClass('hid');
+        $userdropdownbar.show();
     }).mouseleave(function(){
         $username.css('color','#fff');
-        $userdropdownbar.addClass('hid');
+        $userdropdownbar.hide();
     })
     $userdropdownbarli.mouseenter(function(){
         $userdropdownbarli.removeClass('active').find('a').css('color','#fff');
@@ -30,12 +31,13 @@ $(function(){
 /* 左侧条栏 */
 $(function(){
     /* 邮箱 */
-    var $messageemail = $('.messageemail');
-    var $messageemaila = $('.messageemail').find('a');
-    var $messageclose = $('.messageclose');
-    var $blogmessages = $('.blogmessages');
-    var $messagepull = $('.messagepull');
-    var $article = $('.article');
+    var 
+        $messageemail = $('.messageemail'),
+        $messageemaila = $('.messageemail').find('a'),
+        $messageclose = $('.messageclose'),
+        $blogmessages = $('.blogmessages'),
+        $messagepull = $('.messagepull'),
+        $article = $('.article');
     $messageemail.mouseenter(function(){
         $messageemaila.text('786883603@qq.com');
     }).mouseleave(function(){
@@ -58,10 +60,12 @@ $(function(){
     })
 
     /*---- 检测开始时可视窗口大小 ----*/
-    var $topbartitle = $('.topbartitle');
-    var animate_time = true;//用于窗口缩放时，不重复执行关闭左侧栏操作
-    var $topbarlist_small = $('#topbarlist_small');
-    var $topbarlist_label = $('.topbarlist_label');
+    var 
+        $topbartitle = $('.topbartitle'),
+        animate_time = true,//用于窗口缩放时，不重复执行关闭左侧栏操作
+        $topbarlist_small = $('#topbarlist_small'),
+        $topbarlist_label = $('.topbarlist_label'),
+        $topbarlist_label_i = $('.topbarlist_label a i');//缩小后的小按钮
     if ($(window).width()<860) {
         $topbartitle.css('margin','0px');
         $topbarlist_small.addClass('topbarlist_small').addClass('hid');//用于头部条生成按钮下拉菜单
@@ -86,16 +90,16 @@ $(function(){
             animate_time = true;
             $topbarlist_small.removeClass('topbarlist_small').removeClass('hid');
             $topbarlist_label.addClass('hid');
+            $topbarlist_label_i.removeClass('icon-cancel-circle').addClass('icon-menu3');
         }
     })
     /* 按钮事件---缩小头部下拉菜单 */
-    var $topbarlist_label_i = $('.topbarlist_label a i');
     $topbarlist_label.click(function(){
         $topbarlist_small.toggleClass('hid');
         if ($topbarlist_small.hasClass('hid')) {
-            $topbarlist_label_i.removeClass('icon-cancel-circle').addClass('icon-menu3')
+            $topbarlist_label_i.removeClass('icon-cancel-circle').addClass('icon-menu3');
         } else {
-            $topbarlist_label_i.removeClass('icon-menu3').addClass('icon-cancel-circle')
+            $topbarlist_label_i.removeClass('icon-menu3').addClass('icon-cancel-circle');
         }
     })
 })

@@ -2,15 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=0.8,user-scalable=no">
     {% block meta %}<!-- meta -->{% endblock %}
     <title>{% block title %} ? {% endblock %} - Seieiblog</title>
     <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/homepage.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
     <link rel="stylesheet" type="text/css" href="/static/css/icomoon/style.css">
     <link rel="shortcut icon" href="/static/img/wicon.ico">
     <script type="text/javascript" src="/static/js/sha1.min.js"></script>
-    <script type="text/javascript" src="/static/js/vue2.1.8.js"></script>
     <script type="text/javascript" src="/static/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="/static/js/vue2.1.8.js"></script>
     <script type="text/javascript" src="/static/js/blog.js"></script>
     <script type="text/javascript" src="/static/js/event.js"></script>
     {% block beforehead %}<!-- beforehead -->{% endblock %}
@@ -21,32 +22,35 @@
             <h1>Seiei · Blog</h1>
         </div>
         <div class="topbarlist">
-            <div class="hid topbarlist_label fr"><a href="#"><i class="icon-menu3"></i></a></div>
+            <div class="hid topbarlist_label fr"><a href="#0"><i class="icon-menu3"></i></a></div>
             <div id="topbarlist_small">
             <ul class="topbarlist_fl fl">
                 <li><i></i><a href="/">首页</a></li>
                 <li><i></i><a href="/manage/blogs">日志</a></li>
             </ul>
             {% if __user__ %}
-            <ul class="topbarlist_signed fr">
+            <ul class="topbarlist_signed fl">
                 <li class="signed">
                     <a class="username" href="javascript:;">{{ __user__.name }}</a>
-                    <div class="userdropdownbar hid">
-                        <div class="triangle"></div>
-                        <ul>
-                            {% if __user__.admin %}
-                            <li><a href="/manage/blogs/create"><i class="icon-pencil"> </i>写博客</a></li>
-                            {% else %}
-                            <li><i class="icon-lock" id='lock'> 写博客</i></li>
-                            {% endif %}
-                            <li><a href="/manage/comments">后台管理</a></li>
-                            <li><a href="/signout">登出</a></li>
-                        </ul>
-                    </div>
+                </li>
+                <li id="userdropdownbar">
+                    <div class="triangle"></div>
+                    <ul>
+                        {% if __user__.admin %}
+                        <li><a href="/manage/blogs/create"><i class="icon-pencil"> </i>写博客</a></li>
+                        <li class="line"><hr></li>
+                        {% else %}
+                        <li><i class="icon-lock" id='lock'> 写博客</i></li>
+                        <li class="line"><hr></li>
+                        {% endif %}
+                        <li><a href="/manage/comments">后台管理</a></li>
+                        <li class="line"><hr></li>
+                        <li><a href="/signout">登出</a></li>
+                    </ul>
                 </li>
             </ul>
             {% else %}
-            <ul class="topbarlist_sign fr">
+            <ul class="topbarlist_sign fl">
                 <li><a href="/signin">登陆</a></li>
                 <li><a href="/register">注册</a></li>
             </ul>
@@ -69,8 +73,8 @@
                 <li><a href="#">关于本站</a></li>
             </ul>
         </div>
-        <div class="messageclose"><i>x</i></div>
-        <div class="messagepull"><i>Pull</i></div>
+        <div class="messageclose"><i class="icon-cross"></i></div>
+        <div class="messagepull"><i class="icon-forward3"></i></div>
     </div>
 
     <div class="container">

@@ -29,10 +29,14 @@
                 }
             })
         })
+        $(function(){
+            $('.topbarlist_sign li:first-child').addClass('active');
+        })
     </script>
 {% endblock %}
 
 {% block content %}
+    <div class="content-container">
         <div class="rosForm">
             <div class="rosFormtitle">
                 <h1>----  登 录  ----</h1>
@@ -50,4 +54,5 @@
                 </div>
             </form>
         </div>
+    </div>
 {% endblock %}
