@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=0.8,user-scalable=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
     {% block meta %}<!-- meta -->{% endblock %}
     <title>{% block title %} ? {% endblock %} - Seieiblog</title>
     <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
@@ -30,7 +30,7 @@
             {% if __user__ %}
             <ul class="topbarlist_signed fl">
                 <li class="signed">
-                    <a class="username" href="javascript:;">{{ __user__.name }}</a>
+                    <a class="username" href="javascript:void(0);">{{ __user__.name }}</a>
                 </li>
                 <li id="userdropdownbar">
                     <div class="triangle"></div>
@@ -66,20 +66,21 @@
         </div>
         <div class="messageslist">
             <ul>
-                <li><a href="https://github.com/TAKEOFFMYUNDERWEAR target="_blank">我的Github <i class="icon-github"></i></a></li>
+                <li><a href="https://github.com/Seiei-Leung" target="_blank">我的Github <i class="icon-github"></i></a></li>
                 <li><a href="http://blog.csdn.net/qq_38801354" target="_blank">我的CSDN博客</a></li>
-                <li class="messageemail"><a href="javascript:;">我的邮箱</a></li>
-                <li><a href="#">关于本站</a></li>
+                <li class="messageemail"><a href="javascript:void(0);">我的邮箱</a></li>
+                <li><a href="/blog/00150306502761800ac26e6e70541579c6618ef1c329850000">关于本站</a></li>
             </ul>
         </div>
         <div class="messageclose"><i class="icon-cross"></i></div>
         <div class="messagepull"><i class="icon-forward3"></i></div>
     </div>
-
     <div class="container">
         {% block content %}
         {% endblock %}
     </div>
-    
+    <div class="backtop hid">
+        <a href="javascript:void(0);"><i class="icon-arrow-up"></i>TOP</a>
+    </div>
 </body>
 </html>

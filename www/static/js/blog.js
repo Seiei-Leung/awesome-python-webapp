@@ -28,7 +28,7 @@ $(function(){
     })
 })
 
-/* 左侧条栏 */
+/* 左侧条栏拉伸事件，窗口缩放顶条栏以及左侧条栏事件，返回顶部按钮事件 */
 $(function(){
     /* 邮箱 */
     var 
@@ -47,7 +47,6 @@ $(function(){
     $messageclose.click(function(){
         if (!$blogmessages.is('animated')) {
             $blogmessages.animate({left:'-295px'},'slow');
-            $article.animate({margin:'20px 80px'},'slow');//拉伸首页日志
             $messagepull.removeClass('hid');
         }
     })
@@ -67,7 +66,9 @@ $(function(){
         animate_time = true,//用于窗口缩放时，不重复执行关闭左侧栏操作
         $topbarlist_small = $('#topbarlist_small'),
         $topbarlist_label = $('.topbarlist_label'),
-        $topbarlist_label_i = $('.topbarlist_label a i');//缩小后的小按钮
+        $topbarlist_label_i = $('.topbarlist_label a i'),//缩小后的小按钮
+        $backtop = $('.backtop'),
+        $backtop_a = $('.backtop a');
     if ($(window).width()<860) {
         $topbartitle.css('margin','0px');
         $topbarlist_small.addClass('topbarlist_small').addClass('hid');//用于头部条生成按钮下拉菜单
@@ -103,6 +104,18 @@ $(function(){
         } else {
             $topbarlist_label_i.removeClass('icon-menu3').addClass('icon-cancel-circle');
         }
+    })
+    /* 返回顶部按钮事件 */
+    $(window).scroll(function(){
+        if ($(window).scrollTop()>400) {
+            $backtop.removeClass('hid');
+        } else{
+            $backtop.addClass('hid');
+        }
+    })
+    $backtop_a.click(function(event){
+        event.preventDefault();
+        $('html,body').animate({scrollTop:0},'slow');
     })
 })
 

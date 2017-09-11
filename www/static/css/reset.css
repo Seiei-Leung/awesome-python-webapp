@@ -2,7 +2,7 @@
     border: 1px black solid; 
 */
 *{margin:0px;padding:0px;}
-body{font-size:16px;background-color: #f6f6f6;font-family: "Microsoft YaHei";}
+body{font-size:16px;background-color: #f6f6f6;font-family: "Microsoft YaHei",sans-serif;}
 img{border:none;}
 input,select,textarea,button{outline: none;border:none;}
 button:hover{cursor:pointer;}
@@ -10,40 +10,11 @@ textarea{resize:none;}
 a{text-decoration:none;color: #fff;}
 a:hover{color:#ff7e00;}
 li{list-style-type:none;}
-i{font-style:normal;-webkit-user-select: none;}
+i{font-style:normal;-webkit-user-select: none;-moz-user-select:none;-ms-user-select:none;}
 i:hover{cursor:pointer;}
 .clearfix{overflow:auto;}
 .fl{float:left;}
 .fr{float:right;}
 .hid {
     display: none;
-}
-code {
-    padding: 2px 4px;
-    font-size: 90%;
-    color: #c7254e;
-    background-color: #ccc;
-    border-radius: 4px;
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-blockquote {
-    padding: 10px 20px;
-    margin: 1em 40px 1em 40px;
-    border-left: 5px solid #eee;
-    display: block;
-    background-color: #ccc;
-}
-pre {
-    display: block;
-    padding: 9.5px;
-    margin: 5px 10px;
-    font-size: 13px;
-    line-height: 1.42857143;
-    color: #333;
-    word-break: break-all;
-    word-wrap: break-word;
-    background-color: #ccc;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }

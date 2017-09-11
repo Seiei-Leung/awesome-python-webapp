@@ -12,7 +12,7 @@
             i,$tr,$blogname,$blogtime,$blognametd,$blogtimetd;
             for (i=0;i<data.blogs.length;i++) {
                 $tr = $('<tr>');
-                $blogname = $('<a>',{'href':'/blog/'+data.blogs[i].id}).text('<< ' + data.blogs[i].name + ' >>');
+                $blogname = $('<a>',{'href':'/blog/'+data.blogs[i].id,'title':data.blogs[i].summary}).text('<< ' + data.blogs[i].name + ' >>');
                 $blogtime = $('<span>').text(data.blogs[i].create_at.toDateTime());
                 $blognametd = $('<td>').append($blogname);
                 $blogtimetd = $('<td>').append($blogtime);

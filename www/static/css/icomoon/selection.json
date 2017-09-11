@@ -4,32 +4,7 @@
     {
       "icon": {
         "paths": [
-          "M366.336 238.336c-33.323 33.323-33.323 87.339 0 120.661l152.96 153.003-152.96 153.003c-33.323 33.323-33.323 87.339 0 120.661 16.64 16.683 38.485 25.003 60.331 25.003s43.691-8.32 60.331-25.003l273.707-273.664-273.707-273.664c-33.28-33.323-87.381-33.323-120.661 0z"
-        ],
-        "attrs": [],
-        "isMulticolor": false,
-        "isMulticolor2": false,
-        "tags": [
-          "chevron-right"
-        ],
-        "grid": 24
-      },
-      "attrs": [],
-      "properties": {
-        "id": 7,
-        "order": 11,
-        "prevSize": 24,
-        "code": 59648,
-        "name": "chevron-right"
-      },
-      "setIdx": 0,
-      "setId": 2,
-      "iconIdx": 6
-    },
-    {
-      "icon": {
-        "paths": [
-          "M614.997 238.336c-33.28-33.323-87.381-33.323-120.661 0l-273.707 273.664 273.707 273.664c16.64 16.683 38.485 25.003 60.331 25.003s43.691-8.32 60.331-25.003c33.323-33.323 33.323-87.339 0-120.661l-152.96-153.003 152.96-153.003c33.323-33.323 33.323-87.339-0-120.661z"
+          "M444.267 512l225.867-225.867c16.533-16.533 16.533-43.733 0-60.267s-43.733-16.533-60.267 0l-256 256c-16.533 16.533-16.533 43.733 0 60.267l256 256c8.267 8.267 19.2 12.533 30.133 12.533s21.867-4.267 30.133-12.533c16.533-16.533 16.533-43.733 0-60.267l-225.867-225.867z"
         ],
         "attrs": [],
         "isMulticolor": false,
@@ -41,15 +16,40 @@
       },
       "attrs": [],
       "properties": {
-        "id": 8,
-        "order": 12,
+        "id": 34,
+        "order": 3,
         "prevSize": 24,
-        "code": 59649,
+        "code": 59648,
         "name": "chevron-left"
       },
       "setIdx": 0,
       "setId": 2,
-      "iconIdx": 7
+      "iconIdx": 33
+    },
+    {
+      "icon": {
+        "paths": [
+          "M670.133 481.867l-256-256c-16.533-16.533-43.733-16.533-60.267 0s-16.533 43.733 0 60.267l225.867 225.867-225.867 225.867c-16.533 16.533-16.533 43.733 0 60.267 8.267 8.267 19.2 12.533 30.133 12.533s21.867-4.267 30.133-12.533l256-256c16.8-16.533 16.8-43.733-0-60.267z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "chevron-right"
+        ],
+        "grid": 24
+      },
+      "attrs": [],
+      "properties": {
+        "id": 35,
+        "order": 4,
+        "prevSize": 24,
+        "code": 59649,
+        "name": "chevron-right"
+      },
+      "setIdx": 0,
+      "setId": 2,
+      "iconIdx": 34
     },
     {
       "icon": {
@@ -69,7 +69,7 @@
       "properties": {
         "ligatures": "pencil, write",
         "name": "pencil",
-        "order": 2,
+        "order": 6,
         "id": 6,
         "prevSize": 32,
         "code": 59653
@@ -97,7 +97,7 @@
       "properties": {
         "ligatures": "key, password",
         "name": "key",
-        "order": 3,
+        "order": 8,
         "id": 142,
         "prevSize": 32,
         "code": 59789
@@ -125,7 +125,7 @@
       "properties": {
         "ligatures": "lock, secure",
         "name": "lock",
-        "order": 9,
+        "order": 7,
         "id": 144,
         "prevSize": 32,
         "code": 59791
@@ -156,7 +156,7 @@
       "properties": {
         "ligatures": "bin, trashcan",
         "name": "bin",
-        "order": 10,
+        "order": 9,
         "id": 173,
         "prevSize": 32,
         "code": 59820
@@ -185,7 +185,7 @@
       "properties": {
         "ligatures": "menu3, options3",
         "name": "menu3",
-        "order": 8,
+        "order": 15,
         "id": 192,
         "prevSize": 32,
         "code": 59839
@@ -214,7 +214,7 @@
       "properties": {
         "ligatures": "cancel-circle, close",
         "name": "cancel-circle",
-        "order": 6,
+        "order": 13,
         "id": 270,
         "prevSize": 32,
         "code": 59917
@@ -243,7 +243,7 @@
       "properties": {
         "ligatures": "cross, cancel",
         "name": "cross",
-        "order": 5,
+        "order": 10,
         "id": 272,
         "prevSize": 32,
         "code": 59919
@@ -269,7 +269,7 @@
       "properties": {
         "ligatures": "forward3, player12",
         "name": "forward3",
-        "order": 4,
+        "order": 12,
         "id": 289,
         "prevSize": 32,
         "code": 59936
@@ -277,6 +277,34 @@
       "setIdx": 1,
       "setId": 1,
       "iconIdx": 288
+    },
+    {
+      "icon": {
+        "paths": [
+          "M512 32l-480 480h288v512h384v-512h288z"
+        ],
+        "tags": [
+          "arrow-up",
+          "up",
+          "upload",
+          "top"
+        ],
+        "defaultCode": 59954,
+        "grid": 16,
+        "attrs": []
+      },
+      "attrs": [],
+      "properties": {
+        "ligatures": "arrow-up, up",
+        "name": "arrow-up",
+        "order": 2,
+        "id": 307,
+        "prevSize": 32,
+        "code": 59954
+      },
+      "setIdx": 1,
+      "setId": 1,
+      "iconIdx": 306
     },
     {
       "icon": {
@@ -297,7 +325,7 @@
       "properties": {
         "ligatures": "github, brand40",
         "name": "github",
-        "order": 7,
+        "order": 11,
         "id": 433,
         "prevSize": 32,
         "code": 60080

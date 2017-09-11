@@ -12,7 +12,7 @@
         for (i=0;i<comments.length;i++) {
             $tr = $('<tr>');
             $tr.append('<td><span>' + comments[i].user_name + '</span></td>');
-            $tr.append('<td  style="max-width:618px"><span>' + changetotext(comments[i].content) + '</span></td>');
+            $tr.append('<td  style="max-width:618px"><a class="commentlink" href="/blog/' + comments[i].blog_id + '">' + changetotext(comments[i].content) + '</a></td>');
             $tr.append('<td><span>' + comments[i].create_at.toDateTime() + '</span></td>');
             {% if __user__.admin %}
             $tr.append('<td><a href="#0" class="delete_comment" data-id="'+ comments[i].id +'"><i class="icon-bin"></i></a></td>');

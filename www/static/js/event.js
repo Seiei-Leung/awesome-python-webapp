@@ -105,7 +105,7 @@ function _httpJSON (method,url,data,callback){
             }
             return callback(null,r);
         },
-        error:function(XMLHttpResquest,textstatus){
+        error:function(XMLHttpResquest,statustext){
             return callback({'error':'http_bad_response','data': '' + XMLHttpResquest.status,'message': '网络好像出问题了 (HTTP ' + XMLHttpResquest.status + ')'})
         }
     }
@@ -175,11 +175,14 @@ function getJSON (url,data,callback){
         data = {};
     }
     if (typeof(data) === 'object') {//还可以为字符串,注意比较的语法形式
+        /*
         var arr = [];
         $.each(data,function(k,v){
             arr.push(k + '=' + encodeURIComponent(v));
         });
         data = arr.join('&');
+        */
+        data = $.param(data);
     }
     _httpJSON('GET',url,data,callback);
 }
@@ -253,12 +256,12 @@ function makepage (message) {
     })
 }
 
-/*  */
+/* 转义 */
 function changetotext (content) {
     content = content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     return content
 }
-/*  */
+/* event.preventDefault()兼容IE8 */
 function stopDefault(event){
  if ( event && event.preventDefault ){ 
     event.preventDefault();

@@ -16,10 +16,26 @@
         $messagepull.click();
     });
     $(function(){
-        var $topbarlistl = $('.topbarlist_fl li:first-child');
-        var $topbarlistr = $('.topbarlist_fl li:last-child');
+        var 
+        $topbarlistl = $('.topbarlist_fl li:first-child'),
+        $topbarlistr = $('.topbarlist_fl li:last-child'),
+        $article = $('.article'),
+        $messageclose = $('.messageclose'),
+        $messagepull = $('.messagepull');
+        $blogmessages = $('.blogmessages');
         $topbarlistl.addClass('active');
         $topbarlistr.removeClass('active');
+        $messageclose.off('click');
+        $messageclose.click(function(){
+            width = Number($article.css('margin','20px auto').css('width').split('px')[0]);
+            marginLeft = ($(window).width() - width)/2 + 'px';
+            $article.css('margin','20px 60px 20px 340px');
+            $blogmessages.animate({left:'-295px'},'slow');
+            $article.animate({marginLeft:marginLeft,marginRight:marginLeft},'slow',function(){
+                $article.css('margin','20px auto');
+            });//拉伸首页日志
+            $messagepull.removeClass('hid');
+    })
     })
 </script>
 {% endblock %}
@@ -28,7 +44,7 @@
     {% for blog in blogs %}
     <div class="article">
         <div class="article_name">
-            <h2><a href="/blog/{{ blog.id }}">&lt;&lt; {{ blog.name }} &gt;&gt;</a></h2>
+            <h1><a href="/blog/{{ blog.id }}">&lt;&lt; {{ blog.name }} &gt;&gt;</a></h1>
         </div>
         <div class="artcile_summry">
             <p>{{ blog.summary }}</p>
@@ -39,4 +55,10 @@
         </div>
     </div>
     {% endfor %}
+    <div class="article more_article article_name">
+        <h1><a href="/recruit">求职简历</a></h1>
+    </div>
+    <div class="article more_article article_name">
+        <h1><a href="/manage/blogs">more</a></h1>
+    </div>
 {% endblock %}

@@ -29,8 +29,16 @@ async def index(request):
     blogs = await Blog.findall(orderBy='create_at desc')
     return {
         '__template__': 'blogs.html',
-        'blogs': blogs[0:4],
+        'blogs': blogs[0:3],
         '__user__': request.__user__
+    }
+
+#个人简历
+@get('/recruit')
+async def recruit(request):
+    return {
+        '__template__':'recruit.html',
+        '__user__':request.__user__
     }
 
 #显示注册页面
@@ -65,7 +73,7 @@ async def get_blog(request,*,id):
     comments = comments[::-1]
     for c in comments:
         c.html_content = text2html(c.content)
-    blog.html_content = markdown2.markdown(blog.content)
+    blog.html_content = markdown2.markdown(blog.content,extras=["cuddled-lists","tables","fenced-code-blocks",'break-on-newline'])
     return {
         '__template__': 'blog.html',
         'blog': blog,
